@@ -1,13 +1,11 @@
 import fetch from 'isomorphic-fetch'
 import _ from 'lodash';
-import {API_KEY, API_VERSION, LastFm} from "../constants/lastfm_api";
+import {lastFm} from "../constants/lastfm_api";
 
 export const REQUEST_SIMILAR_ARTISTS = 'REQUEST_SIMILAR_ARTISTS';
 export const RECEIVE_SIMILAR_ARTISTS = 'RECEIVE_SIMILAR_ARTISTS';
 export const SELECT_ARTIST = 'SELECT_ARTIST';
 export const INVALIDATE_ARTIST = 'INVALIDATE_ARTIST';
-
-const lastFm = new LastFm({api_key: API_KEY, version: API_VERSION});
 
 export function selectArtist(artist) {
     return {

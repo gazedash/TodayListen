@@ -4,7 +4,7 @@ export default class Playlist extends Component {
     render() {
         return (
             <ul style={this.props.style}>
-                {this.props.songs.map((song, i) =>
+                {this.props.items.map((song, i) =>
                     <li key={i}>{JSON.stringify(song)}</li>
                 )}
             </ul>
@@ -14,5 +14,5 @@ export default class Playlist extends Component {
 
 Playlist.propTypes = {
     style: PropTypes.object,
-    songs: PropTypes.array.isRequired
+    items: PropTypes.array.isRequired
 };

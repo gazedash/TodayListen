@@ -1,6 +1,7 @@
 export const LAST_FM = "https://ws.audioscrobbler.com";
 export const API_VERSION = "2.0";
 export const GET_SIMILAR_ARTISTS = "artist.getsimilar";
+export const GET_POPULAR_TRACKS = "artist.getTopTracks";
 export const API_KEY = "TODAY_LISTEN";
 
 export class LastFm {
@@ -16,4 +17,10 @@ export class LastFm {
     getSimilarArtists(artist) {
         return `${this.buildQuery(GET_SIMILAR_ARTISTS)}&artist=${artist}&limit=3`;
     }
+
+    getPopularSongs(artist) {
+        return `${this.buildQuery(GET_POPULAR_TRACKS)}&artist=${artist}&autocorrect=0&limit=10`
+    }
 }
+
+export const lastFm = new LastFm({api_key: API_KEY, version: API_VERSION});
