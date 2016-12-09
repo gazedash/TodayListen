@@ -5,7 +5,7 @@ export default class Playlist extends Component {
         return (
             <ul style={this.props.style}>
                 {this.props.items.map((song, i) =>
-                    <li key={i}>{JSON.stringify(song)}</li>
+                    <li key={i}>{song}</li>
                 )}
             </ul>
         )

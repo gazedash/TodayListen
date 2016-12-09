@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import {lastFm} from "../constants/lastfm_api";
+import {fetchVideoIfNeeded} from "./videos";
 
 export const REQUEST_POPULAR_SONGS = 'REQUEST_POPULAR_SONGS';
 export const RECEIVE_POPULAR_SONGS = 'RECEIVE_POPULAR_SONGS';
@@ -20,14 +21,20 @@ function requestPopular(artist) {
 }
 
 function receivePopular(artist, json) {
-    const songs = _.get(json, 'toptracks.track', []);
+    return dispatch => {
+        const songs = _.map(_.get(json, 'toptracks.track', []), (song) => {
+            const query = artist + " - " + song.name;
+            dispatch(fetchVideoIfNeeded(query));
+            return query;
+        });
 
-    return {
-        type: RECEIVE_POPULAR_SONGS,
-        artist,
-        songs: _.get(json, 'toptracks.track', []),
-        receivedAt: Date.now(),
+       return {
+            type: RECEIVE_POPULAR_SONGS,
+                artist,
+                songs,
+                receivedAt: Date.now(),
         ...json
+        }
     }
 }
 
