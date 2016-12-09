@@ -23,7 +23,6 @@ function receiveVideo(query, json) {
     const videos = _.map(_.get(json, "items"), (video) => {
         return _.get(video, "id.videoId");
     });
-    console.log("videoSOS,", videos);
 
     return {
         type: RECEIVE_VIDEO,

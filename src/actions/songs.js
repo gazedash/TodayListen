@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import _ from "lodash";
 import {lastFm} from "../constants/lastfm_api";
 import {fetchVideoIfNeeded} from "./videos";
 
@@ -20,21 +20,12 @@ function requestPopular(artist) {
     }
 }
 
-function receivePopular(artist, json) {
-    return dispatch => {
-        const songs = _.map(_.get(json, 'toptracks.track', []), (song) => {
-            const query = artist + " - " + song.name;
-            dispatch(fetchVideoIfNeeded(query));
-            return query;
-        });
-
-       return {
-            type: RECEIVE_POPULAR_SONGS,
-                artist,
-                songs,
-                receivedAt: Date.now(),
-        ...json
-        }
+function receivePopular(artist, songs) {
+    return {
+        type: RECEIVE_POPULAR_SONGS,
+        artist,
+        songs,
+        receivedAt: Date.now(),
     }
 }
 
@@ -47,7 +38,14 @@ function fetchSongs(artist) {
                 console.log("then fetch", response);
                 return response.json();
             })
-            .then(json => dispatch(receivePopular(artist, json)))
+            .then(json => {
+                const songs = _.map(_.get(json, 'toptracks.track', []), (song) => {
+                    const query = artist + " - " + song.name;
+                    dispatch(fetchVideoIfNeeded(query));
+                    return query;
+                });
+                return dispatch(receivePopular(artist, songs));
+            })
     }
 }
 

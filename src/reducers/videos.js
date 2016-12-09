@@ -3,11 +3,12 @@ import {
     RECEIVE_VIDEO,
     REQUEST_VIDEO,
 } from '../actions/videos';
+import _ from 'lodash';
 
 function videos(state = {
     isFetching: false,
     didInvalidate: false,
-    items: []
+    items: [],
 }, action) {
     switch (action.type) {
         case INVALIDATE_VIDEO:
@@ -21,6 +22,7 @@ function videos(state = {
             });
         case RECEIVE_VIDEO:
             return Object.assign({}, state, {
+                query: action.query,
                 isFetching: false,
                 didInvalidate: false,
                 items: action.videos,
@@ -36,8 +38,8 @@ export function suggestedVideos(state = { }, action) {
         case INVALIDATE_VIDEO:
         case RECEIVE_VIDEO:
         case REQUEST_VIDEO:
-            console.log("reducer", action, state);
             return Object.assign({}, state, {
+                //TODO: deal with spaces...
                 [action.query]: videos(state[action.query], action)
             });
         default:
