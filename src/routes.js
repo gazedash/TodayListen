@@ -1,8 +1,7 @@
 // src/routes.js
 import React from "react";
 import {Router, Route} from "react-router";
-import App from "./components/App/App";
-import AsyncApp from "./containers/AsyncApp";
+import App from "./containers/App";
 import configureStore from "./configureStore";
 import { Provider } from 'react-redux'
 
@@ -29,7 +28,6 @@ const Routes = (props) => (
         <Router {...props}>
             <Route path="/" component={App}/>
             <Route path="/about" component={About}/>
-            <Route path="/AsyncApp" component={AsyncApp}/>
             <Route path="*" component={NotFound}/>
         </Router>
     </Provider>

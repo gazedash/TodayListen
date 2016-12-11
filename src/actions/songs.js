@@ -35,7 +35,7 @@ function fetchSongs(artist) {
         const getPopular = lastFm.getPopularSongs(artist);
         return fetch(getPopular)
             .then(response => {
-                console.log("then fetch", response);
+                // console.log("then fetch", response);
                 return response.json();
             })
             .then(json => {
@@ -50,7 +50,8 @@ function fetchSongs(artist) {
 }
 
 function shouldFetchSongs(state, artist) {
-    console.log("should?", state);
+    // console.log("should?", state);
+    // TODO: check
     const songs = _.get(state, `suggestedSongs.${artist}`);
 
     if (!songs) {

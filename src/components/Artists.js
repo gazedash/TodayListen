@@ -3,11 +3,14 @@ import React, { PropTypes, Component } from 'react'
 export default class Artists extends Component {
     render() {
         return (
-            <ul style={this.props.style}>
+            <div style={this.props.style}>
                 {this.props.items.map((artist, i) =>
-                    <li key={i}>{artist.name}</li>
+                    <span style={{
+                        backgroundColor: `#${2*i+2}${1*i+4}${3*i+1}`,
+                        margin: "0px 5px 0px 5px",
+                    }} key={i}>{artist.name}</span>
                 )}
-            </ul>
+            </div>
         )
     }
 }

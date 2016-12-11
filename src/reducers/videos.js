@@ -1,9 +1,4 @@
-import {
-    INVALIDATE_VIDEO,
-    RECEIVE_VIDEO,
-    REQUEST_VIDEO,
-} from '../actions/videos';
-import _ from 'lodash';
+import {INVALIDATE_VIDEO, RECEIVE_VIDEO, REQUEST_VIDEO} from "../actions/videos";
 
 function videos(state = {
     isFetching: false,
@@ -33,15 +28,19 @@ function videos(state = {
     }
 }
 
-export function suggestedVideos(state = { }, action) {
+export function suggestedVideos(state = {}, action) {
     switch (action.type) {
         case INVALIDATE_VIDEO:
         case RECEIVE_VIDEO:
         case REQUEST_VIDEO:
-            return Object.assign({}, state, {
-                //TODO: deal with spaces...
-                [action.query]: videos(state[action.query], action)
-            });
+            return {
+                //     TODO: deal with spaces...
+                // [action.query]: videos(state[action.query], action)
+                // [action.query]: videos(state[action.query], action)
+                ...state,
+                [action.query]: videos(state[action.query], action),
+            };
+        // return newVersion;
         default:
             return state
     }

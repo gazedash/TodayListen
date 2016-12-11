@@ -38,7 +38,7 @@ function fetchVideo(query) {
         const getQuery = youTube.search(query);
         return fetch(getQuery)
             .then(response => {
-                console.log("then fetch video", response);
+                // console.log("then fetch video", response);
                 return response.json();
             })
             .then(json => dispatch(receiveVideo(query, json)))
@@ -46,7 +46,8 @@ function fetchVideo(query) {
 }
 
 function shouldFetchVideo(state, query) {
-    console.log("should?", state);
+    // TODO: check
+    // console.log("should?", state);
     const songs = _.get(state, `suggestedVideo.${query}`);
 
     if (!songs) {

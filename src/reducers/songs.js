@@ -36,9 +36,10 @@ export function popularSongs(state = { }, action) {
         case INVALIDATE_SONGS:
         case RECEIVE_POPULAR_SONGS:
         case REQUEST_POPULAR_SONGS:
-            return Object.assign({}, state, {
-                [action.artist]: songs(state[action.artist], action)
-            });
+            return {
+                ...state,
+                [action.artist]: songs(state[action.artist], action),
+            };
         default:
             return state
     }

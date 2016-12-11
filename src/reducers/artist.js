@@ -46,9 +46,10 @@ export function suggestedArtists(state = { }, action) {
         case INVALIDATE_ARTIST:
         case RECEIVE_SIMILAR_ARTISTS:
         case REQUEST_SIMILAR_ARTISTS:
-            return Object.assign({}, state, {
-                [action.artist]: songs(state[action.artist], action)
-            });
+            return {
+                ...state,
+                [action.artist]: songs(state[action.artist], action),
+            };
         default:
             return state
     }

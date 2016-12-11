@@ -2,21 +2,25 @@ import React, {Component, PropTypes} from "react";
 import {connect} from "react-redux";
 import {selectArtist, fetchArtistsIfNeeded, invalidateArtist} from "../actions/artist";
 import {fetchSongsIfNeeded, invalidateSongs} from "../actions/songs";
-import Picker from "../components/Picker";
 import Playlist from "../components/Playlist";
-import Artists from "../components/Artists";
+import _ from "lodash";
 import YouTube from "react-youtube";
-import _ from 'lodash';
+import {invalidateVideo, fetchVideoIfNeeded} from "../actions/videos";
 
-class AsyncApp extends Component {
+class App extends Component {
     constructor(props) {
         super(props);
         this.handleChange = this.handleChange.bind(this);
         this.handleRefreshClick = this.handleRefreshClick.bind(this)
+        this.state = {
+            current: 0,
+            playing: false,
+        }
     }
 
     componentDidMount() {
-        const {dispatch, selectedArtist, songs} = this.props;
+        const {dispatch, selectedArtist} = this.props;
+
         dispatch(fetchArtistsIfNeeded(selectedArtist));
 
         dispatch(fetchSongsIfNeeded(selectedArtist));
@@ -44,42 +48,97 @@ class AsyncApp extends Component {
 
         dispatch(invalidateSongs(selectedArtist));
         dispatch(fetchSongsIfNeeded(selectedArtist));
+
+        dispatch(invalidateVideo(selectedArtist));
+        dispatch(fetchVideoIfNeeded(selectedArtist));
+    }
+
+    play() {
+        console.log("click");
+        console.log(this.refs, _.get(this.refs, "youtube"));
+        const player = this.refs.youtube.internalPlayer;
+        if (this.state.playing) {
+            player.pauseVideo();
+        } else {
+            player.playVideo();
+        }
+        this.setState((prevState) => ({
+            playing: !prevState.playing,
+        }));
+    }
+
+    next(forward = true) {
+        const { current, playing } = this.state;
+        const { videos } = this.props;
+        let shouldPlay = current > 0;
+        if (forward) {
+            shouldPlay = videos.length - 1 > current;
+        }
+        if (shouldPlay) {
+            const player = this.refs.youtube.internalPlayer;
+            const diff = forward ? 1 : -1;
+            const videoId = videos[current + diff].items[0];
+            this.setState((prevState) => ({
+                current: prevState.current + diff,
+            }));
+            player.loadVideoByUrl(`https://www.youtube.com/v/${videoId}?version=3`).then(() => {
+                if (playing) {
+                    player.playVideo();
+                }
+            });
+        }
     }
 
     render() {
         const {selectedArtist, artists, isFetching, songs, videos} = this.props;
-        console.log(_.toArray(videos));
 
         const opts = {
             height: '240',
             width: '360',
             playerVars: { // https://developers.google.com/youtube/player_parameters
-                autoplay: 1
+                autoplay: 0
             }
+        };
+
+        const style = {
+            backgroundColor: "#ff3399",
+            margin: "5px",
         };
 
         return (
             <div>
-                <Picker value={selectedArtist}
-                        onChange={this.handleChange}
-                        options={['Mono', 'frontend']}
-                />
+                {/*<Picker value={selectedArtist}*/}
+                {/*onChange={this.handleChange}*/}
+                {/*options={['Mono', 'frontend']}*/}
+                {/*/>*/}
                 {!isFetching ? <h6><a href='#' onClick={this.handleRefreshClick}> Refresh</a></h6> : null}
                 {isFetching && artists.length === 0 ? <h6>Loading...</h6> : null}
                 {!isFetching && artists.length === 0 ? <h6>Empty.</h6> : null}
-                {artists.length > 0 ? <Artists items={artists}/> : null}
-                <Playlist items={songs}/>
-                <div>{JSON.stringify(videos)}</div>
-                <YouTube
-                    opts={opts}
-                    videoId="t8JzbrduVXU"
+                {/*{artists.length > 0 ? <Artists items={artists}/> : null}*/}
+                <i className="fa fa-address-book"/>
+                <Playlist
+                    onClick={() => this.play()}
+                    items={videos}
+                    playing={this.state.playing}
+                    current={this.state.current}
                 />
+                <YouTube
+                    onEnd={() => this.next()}
+                    ref="youtube"
+                    opts={opts}
+                    videoId={_.get(videos[this.state.current], "items[0]")}
+                />
+                <div>
+                    <span style={style} onClick={() => this.next(false)}>{"<"}</span>
+                    <span style={style} onClick={() => this.play()}>{this.state.playing ? "PAUSE" : "PLAY"}</span>
+                    <span style={style} onClick={() => this.next()}>></span>
+                </div>
             </div>
         )
     }
 }
 
-AsyncApp.propTypes = {
+App.propTypes = {
     selectedArtist: PropTypes.string.isRequired,
     artists: PropTypes.array.isRequired,
     videos: PropTypes.array.isRequired,
@@ -110,7 +169,9 @@ function mapStateToProps(state) {
     };
 
     return {
-        videos,
+        videos: _.map(videos, ((item) => {
+            return item
+        })),
         selectedArtist,
         artists,
         songs,
@@ -121,4 +182,4 @@ function mapStateToProps(state) {
     }
 }
 
-export default connect(mapStateToProps)(AsyncApp);
+export default connect(mapStateToProps)(App);

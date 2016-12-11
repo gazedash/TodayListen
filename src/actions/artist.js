@@ -45,7 +45,7 @@ function fetchArtists(artist) {
         const getSimilar = lastFm.getSimilarArtists(artist);
         return fetch(getSimilar)
             .then(response => {
-                console.log("then fetch", response);
+                // console.log("then fetch", response);
                 return response.json();
             })
             .then(json => dispatch(receiveSimilar(artist, json)))
@@ -53,6 +53,7 @@ function fetchArtists(artist) {
 }
 
 function shouldFetchArtists(state, artist) {
+    // TODO: check
     const artists = _.get(state, `suggestedArtists.${artist}`);
 
     if (!artists) {
