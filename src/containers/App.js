@@ -53,8 +53,9 @@ class App extends Component {
         dispatch(fetchVideoIfNeeded(selectedArtist));
     }
 
-    play() {
-        console.log("click");
+    play(e) {
+        event.preventDefault();
+        console.log("click", e);
         console.log(this.refs, _.get(this.refs, "youtube"));
         const player = this.refs.youtube.internalPlayer;
         if (this.state.playing) {
@@ -103,6 +104,7 @@ class App extends Component {
         const style = {
             backgroundColor: "#ff3399",
             margin: "5px",
+            display: "block",
         };
 
         return (
@@ -115,9 +117,8 @@ class App extends Component {
                 {isFetching && artists.length === 0 ? <h6>Loading...</h6> : null}
                 {!isFetching && artists.length === 0 ? <h6>Empty.</h6> : null}
                 {/*{artists.length > 0 ? <Artists items={artists}/> : null}*/}
-                <i className="fa fa-address-book"/>
                 <Playlist
-                    onClick={() => this.play()}
+                    onClick={(i) => this.play(i)}
                     items={videos}
                     playing={this.state.playing}
                     current={this.state.current}
@@ -129,9 +130,15 @@ class App extends Component {
                     videoId={_.get(videos[this.state.current], "items[0]")}
                 />
                 <div>
-                    <span style={style} onClick={() => this.next(false)}>{"<"}</span>
-                    <span style={style} onClick={() => this.play()}>{this.state.playing ? "PAUSE" : "PLAY"}</span>
-                    <span style={style} onClick={() => this.next()}>></span>
+                    <span style={style} onClick={() => this.next(false)}>
+                        <i className="fa fa-2x fa-caret-left"/>
+                    </span>
+                    <span style={style} onClick={() => this.play()}>
+                        {this.state.playing ? "PAUSE" : "PLAY"}
+                    </span>
+                    <span style={style} onClick={() => this.next()}>
+                        <i className="fa fa-2x fa-caret-right"/>
+                    </span>
                 </div>
             </div>
         )

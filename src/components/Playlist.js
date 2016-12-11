@@ -1,4 +1,5 @@
 import React, {PropTypes, Component} from "react";
+import "./Playlist.css";
 
 export default class Playlist extends Component {
     constructor(props) {
@@ -10,26 +11,6 @@ export default class Playlist extends Component {
         }
     }
 
-    onClick(event, i) {
-        event.preventDefault();
-        this.setState((prevState) => ({
-            play: !prevState.play,
-        }));
-        console.log("HEY PATIMAKER");
-
-        // const player = this.refs.youtube._internalPlayer;
-        // player.pauseVideo();
-
-        // event.target.pauseVideo();
-    }
-
-    onPlay(event, i) {
-        console.log(i);
-        this.setState((prevState) => ({
-            [i]: event,
-        }));
-    }
-
     render() {
         const {playing, current} = this.props;
 
@@ -37,9 +18,11 @@ export default class Playlist extends Component {
             <div style={this.props.style}>
                 {this.props.items.map((song, i) => {
                     return (
-                        <div key={i}>
+                        <div onClick={this.props.onClick} className="playlist-item" key={i}>
                             {playing && current === i ?
-                                <span onClick={() => this.props.onClick()}> !!! </span> : null}
+                                <span>
+                                    <i className="fa fa-play playing"/>
+                                </span> : null}
                                 {song.query}
                         </div>
                     )
