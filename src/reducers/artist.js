@@ -10,34 +10,34 @@ export function selectedArtist(state = 'Mono', action) {
         case SELECT_ARTIST:
             return action.artist;
         default:
-            return state
+            return state;
     }
 }
 
 function songs(state = {
     isFetching: false,
     didInvalidate: false,
-    items: []
+    items: [],
 }, action) {
     switch (action.type) {
         case INVALIDATE_ARTIST:
-            return Object.assign({}, state, {
+            return {...state,
                 didInvalidate: true,
-            });
+            };
         case REQUEST_SIMILAR_ARTISTS:
-            return Object.assign({}, state, {
+            return {...state,
                 isFetching: true,
-                didInvalidate: false
-            });
+                didInvalidate: false,
+            };
         case RECEIVE_SIMILAR_ARTISTS:
-            return Object.assign({}, state, {
+            return {...state,
                 isFetching: false,
                 didInvalidate: false,
                 items: action.posts,
-                lastUpdated: action.receivedAt
-            });
+                lastUpdated: action.receivedAt,
+            };
         default:
-            return state
+            return state;
     }
 }
 
@@ -51,6 +51,6 @@ export function suggestedArtists(state = { }, action) {
                 [action.artist]: songs(state[action.artist], action),
             };
         default:
-            return state
+            return state;
     }
 }

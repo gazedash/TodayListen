@@ -9,14 +9,14 @@ export const INVALIDATE_SONGS = 'INVALIDATE_SONGS';
 export function invalidateSongs(artist) {
     return {
         type: INVALIDATE_SONGS,
-        artist
+        artist,
     }
 }
 
 function requestPopular(artist) {
     return {
         type: REQUEST_POPULAR_SONGS,
-        artist
+        artist,
     }
 }
 
@@ -35,7 +35,6 @@ function fetchSongs(artist) {
         const getPopular = lastFm.getPopularSongs(artist);
         return fetch(getPopular)
             .then(response => {
-                // console.log("then fetch", response);
                 return response.json();
             })
             .then(json => {
@@ -50,23 +49,21 @@ function fetchSongs(artist) {
 }
 
 function shouldFetchSongs(state, artist) {
-    // console.log("should?", state);
     // TODO: check
     const songs = _.get(state, `suggestedSongs.${artist}`);
-
     if (!songs) {
-        return true
+        return true;
     } else if (state.isFetching) {
-        return false
+        return false;
     } else {
-        return state.didInvalidate
+        return state.didInvalidate;
     }
 }
 
 export function fetchSongsIfNeeded(artist) {
     return (dispatch, getState) => {
         if (shouldFetchSongs(getState(), artist)) {
-            return dispatch(fetchSongs(artist))
+            return dispatch(fetchSongs(artist));
         }
     }
 }

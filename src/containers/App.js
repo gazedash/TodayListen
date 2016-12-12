@@ -2,7 +2,8 @@ import React, {Component, PropTypes} from "react";
 import {connect} from "react-redux";
 import {selectArtist, fetchArtistsIfNeeded, invalidateArtist} from "../actions/artist";
 import {fetchSongsIfNeeded, invalidateSongs} from "../actions/songs";
-import Playlist from "../components/Playlist";
+import Playlist from "../components/Playlist/Playlist";
+import Controls from "../components/Controls/Controls";
 import _ from "lodash";
 import YouTube from "react-youtube";
 import {invalidateVideo, fetchVideoIfNeeded} from "../actions/videos";
@@ -13,8 +14,8 @@ class App extends Component {
         this.handleChange = this.handleChange.bind(this);
         this.handleRefreshClick = this.handleRefreshClick.bind(this)
         this.state = {
-            current: 0,
-            playing: false,
+            playingId: 0,
+            isPlaying: false,
         }
     }
 
@@ -53,45 +54,121 @@ class App extends Component {
         dispatch(fetchVideoIfNeeded(selectedArtist));
     }
 
-    play(e) {
-        event.preventDefault();
-        console.log("click", e);
-        console.log(this.refs, _.get(this.refs, "youtube"));
+    play(index) {
         const player = this.refs.youtube.internalPlayer;
-        if (this.state.playing) {
+        if (this.state.isPlaying) {
             player.pauseVideo();
         } else {
             player.playVideo();
         }
         this.setState((prevState) => ({
-            playing: !prevState.playing,
+            playingId: index ? index : prevState.playingId,
+            isPlaying: !prevState.isPlaying,
         }));
     }
 
-    next(forward = true) {
-        const { current, playing } = this.state;
-        const { videos } = this.props;
-        let shouldPlay = current > 0;
-        if (forward) {
-            shouldPlay = videos.length - 1 > current;
-        }
-        if (shouldPlay) {
-            const player = this.refs.youtube.internalPlayer;
-            const diff = forward ? 1 : -1;
-            const videoId = videos[current + diff].items[0];
-            this.setState((prevState) => ({
-                current: prevState.current + diff,
-            }));
+    loadVideo(offset, play) {
+        const {isPlaying, playingId} = this.state;
+        const player = this.refs.youtube.internalPlayer;
+        if (offset !== playingId) {
+            const {videos} = this.props;
+            const videoId = videos[offset].items[0];
             player.loadVideoByUrl(`https://www.youtube.com/v/${videoId}?version=3`).then(() => {
-                if (playing) {
+                if (isPlaying || play) {
+                    if (play) {
+                        this.setState({
+                            playingId: offset,
+                            isPlaying: true,
+                        })
+                    }
                     player.playVideo();
                 }
             });
+        } else {
+            if (isPlaying) {
+                player.pauseVideo();
+                // player.playVideo();
+                this.setState((prevState) => ({
+                    isPlaying: !isPlaying,
+                }));
+            } else {
+                player.playVideo();
+                this.setState((prevState) => ({
+                    playingId: offset ? offset : prevState.playingId,
+                    isPlaying: !isPlaying,
+                }));
+            }
         }
     }
 
-    render() {
-        const {selectedArtist, artists, isFetching, songs, videos} = this.props;
+    next(forward = true) {
+        const {playingId} = this.state;
+        const {videos} = this.props;
+        let shouldPlay = playingId > 0;
+        if (forward) {
+            shouldPlay = videos.length - 1 > playingId;
+        }
+        if (shouldPlay) {
+            const diff = playingId + (forward ? 1 : -1);
+            this.loadVideo(diff);
+            this.setState((prevState) => ({
+                playingId: diff,
+            }));
+        }
+    }
+
+    onPlayerPlayClick() {
+        const {isPlaying} = this.state;
+        if (!isPlaying) {
+            this.setState({
+                isPlaying: !isPlaying,
+            })
+        }
+    }
+
+    onPlayerPauseClick() {
+        const {isPlaying} = this.state;
+        if (isPlaying) {
+            this.setState({
+                isPlaying: !isPlaying,
+            })
+        }
+    }
+
+    renderControls() {
+        return (
+            <Controls
+                isPlaying={this.state.isPlaying}
+                next={() => this.next()}
+                prev={() => this.next(false)}
+                play={() => this.play()}
+            />)
+    }
+
+
+    renderPlaylist() {
+        const {artists, isFetching, videos} = this.props;
+
+        if (artists.length === 0) {
+            if (isFetching) {
+                return (<h6>Loading...</h6>);
+            } else {
+                return (<h6>Empty.</h6>);
+            }
+        }
+
+        return (
+            <Playlist
+                onClick={(i) => this.loadVideo(i, true)}
+                items={videos}
+                isPlaying={this.state.isPlaying}
+                playingId={this.state.playingId}
+            />
+        )
+    }
+
+    renderPlayer() {
+        const {videos} = this.props;
 
         const opts = {
             height: '240',
@@ -101,11 +178,20 @@ class App extends Component {
             }
         };
 
-        const style = {
-            backgroundColor: "#ff3399",
-            margin: "5px",
-            display: "block",
-        };
+        return (
+            <YouTube
+                onEnd={() => this.next()}
+                onPlay={() => this.onPlayerPlayClick()}
+                onPause={() => this.onPlayerPauseClick()}
+                ref="youtube"
+                opts={opts}
+                videoId={_.get(videos[this.state.playingId], "items[0]")}
+            />
+        )
+    }
+
+    render() {
+        const {isFetching} = this.props;
 
         return (
             <div>
@@ -113,33 +199,16 @@ class App extends Component {
                 {/*onChange={this.handleChange}*/}
                 {/*options={['Mono', 'frontend']}*/}
                 {/*/>*/}
+                {this.renderControls()}
+                <section style={{
+                    padding: 0,
+                    margin: 0,
+                    display: "flex",
+                }}>
+                    {this.renderPlaylist()}
+                    {this.renderPlayer()}
+                </section>
                 {!isFetching ? <h6><a href='#' onClick={this.handleRefreshClick}> Refresh</a></h6> : null}
-                {isFetching && artists.length === 0 ? <h6>Loading...</h6> : null}
-                {!isFetching && artists.length === 0 ? <h6>Empty.</h6> : null}
-                {/*{artists.length > 0 ? <Artists items={artists}/> : null}*/}
-                <Playlist
-                    onClick={(i) => this.play(i)}
-                    items={videos}
-                    playing={this.state.playing}
-                    current={this.state.current}
-                />
-                <YouTube
-                    onEnd={() => this.next()}
-                    ref="youtube"
-                    opts={opts}
-                    videoId={_.get(videos[this.state.current], "items[0]")}
-                />
-                <div>
-                    <span style={style} onClick={() => this.next(false)}>
-                        <i className="fa fa-2x fa-caret-left"/>
-                    </span>
-                    <span style={style} onClick={() => this.play()}>
-                        {this.state.playing ? "PAUSE" : "PLAY"}
-                    </span>
-                    <span style={style} onClick={() => this.next()}>
-                        <i className="fa fa-2x fa-caret-right"/>
-                    </span>
-                </div>
             </div>
         )
     }

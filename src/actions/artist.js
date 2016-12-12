@@ -10,14 +10,14 @@ export const INVALIDATE_ARTIST = 'INVALIDATE_ARTIST';
 export function selectArtist(artist) {
     return {
         type: SELECT_ARTIST,
-        artist
+        artist,
     }
 }
 
 export function invalidateArtist(artist) {
     return {
         type: INVALIDATE_ARTIST,
-        artist
+        artist,
     }
 }
 
@@ -25,7 +25,7 @@ export function invalidateArtist(artist) {
 function requestSimilar(artist) {
     return {
         type: REQUEST_SIMILAR_ARTISTS,
-        artist
+        artist,
     }
 }
 
@@ -35,7 +35,7 @@ function receiveSimilar(artist, json) {
         artist,
         posts: _.get(json, 'similarartists.artist', []),
         receivedAt: Date.now(),
-        ...json
+        ...json,
     }
 }
 
@@ -45,30 +45,28 @@ function fetchArtists(artist) {
         const getSimilar = lastFm.getSimilarArtists(artist);
         return fetch(getSimilar)
             .then(response => {
-                // console.log("then fetch", response);
                 return response.json();
             })
-            .then(json => dispatch(receiveSimilar(artist, json)))
+            .then(json => dispatch(receiveSimilar(artist, json)));
     }
 }
 
 function shouldFetchArtists(state, artist) {
     // TODO: check
     const artists = _.get(state, `suggestedArtists.${artist}`);
-
     if (!artists) {
-        return true
+        return true;
     } else if (state.isFetching) {
-        return false
+        return false;
     } else {
-        return state.didInvalidate
+        return state.didInvalidate;
     }
 }
 
 export function fetchArtistsIfNeeded(artist) {
     return (dispatch, getState) => {
         if (shouldFetchArtists(getState(), artist)) {
-            return dispatch(fetchArtists(artist))
+            return dispatch(fetchArtists(artist));
         }
     }
 }

@@ -19,7 +19,7 @@ export class LastFm {
     }
 
     getPopularSongs(artist) {
-        return `${this.buildQuery(GET_POPULAR_TRACKS)}&artist=${artist}&autocorrect=0&limit=3`
+        return `${this.buildQuery(GET_POPULAR_TRACKS)}&artist=${artist}&autocorrect=0&limit=10`
     }
 }
 
