@@ -1,11 +1,13 @@
 import React, {PropTypes} from "react";
 import IconButton from "material-ui/IconButton";
 import {Toolbar, ToolbarGroup} from "material-ui/Toolbar";
+import {BottomNavigation, BottomNavigationItem} from "material-ui/BottomNavigation";
+import Paper from 'material-ui/Paper';
 import "./Controls.css";
 
 const Controls = React.createClass({
     render() {
-        const {isPlaying} = this.props;
+        const {isPlaying, style} = this.props;
         const largeIcon = {
             fontSize: 40,
         };
@@ -17,12 +19,12 @@ const Controls = React.createClass({
         };
 
         return (
-            <Toolbar
+            <Paper zDepth={1}>
+            <BottomNavigation
+                style={style}
                 className="controls"
             >
-                <ToolbarGroup
-                    firstChild={true}
-                >
+                <ToolbarGroup>
                     <IconButton
                         style={large}
                         iconStyle={largeIcon}
@@ -42,7 +44,8 @@ const Controls = React.createClass({
                         onClick={this.props.next.bind(this, false)}
                     />
                 </ToolbarGroup>
-            </Toolbar>
+            </BottomNavigation>
+            </Paper>
         );
     }
 });

@@ -1,5 +1,7 @@
 .controls {
     background-color: #ff3399 !important;
-    display: flex;
 }
 
+.controls > div {
+    justify-content: center !important;
+}

@@ -7,6 +7,8 @@ import Controls from "../components/Controls/Controls";
 import _ from "lodash";
 import YouTube from "react-youtube";
 import {invalidateVideo, fetchVideoIfNeeded} from "../actions/videos";
+import AppBar from "material-ui/AppBar";
+import Search from "../components/Search/Search";
 
 class App extends Component {
     constructor(props) {
@@ -138,6 +140,10 @@ class App extends Component {
     renderControls() {
         return (
             <Controls
+                style={{
+                    position: 'fixed',
+                    bottom: 0,
+                }}
                 isPlaying={this.state.isPlaying}
                 next={() => this.next()}
                 prev={() => this.next(false)}
@@ -179,14 +185,23 @@ class App extends Component {
         };
 
         return (
-            <YouTube
-                onEnd={() => this.next()}
-                onPlay={() => this.onPlayerPlayClick()}
-                onPause={() => this.onPlayerPauseClick()}
-                ref="youtube"
-                opts={opts}
-                videoId={_.get(videos[this.state.playingId], "items[0]")}
-            />
+            <div
+                style={{
+                    bottom: '70px',
+                    position: 'absolute',
+                    right: '20px',
+                    top: 'auto',
+                }}
+            >
+                <YouTube
+                    onEnd={() => this.next()}
+                    onPlay={() => this.onPlayerPlayClick()}
+                    onPause={() => this.onPlayerPauseClick()}
+                    ref="youtube"
+                    opts={opts}
+                    videoId={_.get(videos[this.state.playingId], "items[0]")}
+                />
+            </div>
         )
     }
 
@@ -199,7 +214,13 @@ class App extends Component {
                 {/*onChange={this.handleChange}*/}
                 {/*options={['Mono', 'frontend']}*/}
                 {/*/>*/}
-                {this.renderControls()}
+                <AppBar
+                    style={{
+                        color: 'white !important',
+                    }}
+                >
+                    <Search/>
+                </AppBar>
                 <section style={{
                     padding: 0,
                     margin: 0,
@@ -209,6 +230,7 @@ class App extends Component {
                     {this.renderPlayer()}
                 </section>
                 {!isFetching ? <h6><a href='#' onClick={this.handleRefreshClick}> Refresh</a></h6> : null}
+                {this.renderControls()}
             </div>
         )
     }
