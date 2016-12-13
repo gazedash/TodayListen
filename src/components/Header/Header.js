@@ -54,6 +54,8 @@ export default class Header extends Component {
             <AppBar
                 showMenuIconButton={false}
                 style={{
+                    top: 0,
+                    position: 'fixed',
                     color: 'white !important',
                 }}
             >

@@ -39,7 +39,6 @@ class App extends Component {
     }
 
     shouldComponentUpdate(nextProps) {
-        console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!", nextProps);
         return !!nextProps.videos.length;
     }
 
@@ -69,7 +68,7 @@ class App extends Component {
     }
 
     play(index) {
-        const player = _.get(this.refs, 'youtube.internalPlayer');
+        const player = _.get(this.refs, ['youtube', 'internalPlayer']);
         if (player) {
             if (this.state.isPlaying) {
                 player.pauseVideo();
@@ -206,7 +205,7 @@ class App extends Component {
             <div
                 style={{
                     bottom: '70px',
-                    position: 'absolute',
+                    position: 'fixed',
                     right: '20px',
                     top: 'auto',
                 }}
@@ -226,10 +225,10 @@ class App extends Component {
     render() {
         const {isFetching} = this.props;
 
-        const style = {} || {
+        const style = {
             padding: 0,
             margin: 0,
-            display: "flex",
+            marginTop: 65,
         };
 
         return (
@@ -248,9 +247,11 @@ class App extends Component {
                     {this.renderPlayer()}
                     {<h6><a href='#' onClick={this.handleRefreshClick}> Refresh</a></h6>}
                 </section>
-                <section>
+                <footer style={{
+                    marginTop: 56,
+                }}>
                     {this.renderControls()}
-                </section>
+                </footer>
             </div>
         )
     }
