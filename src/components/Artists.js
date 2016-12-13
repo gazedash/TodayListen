@@ -19,3 +19,7 @@ Artists.propTypes = {
     style: PropTypes.object,
     items: PropTypes.array.isRequired
 };
+
+Artists.defaultProps = {
+    style: null,
+};

@@ -7,14 +7,14 @@ import Controls from "../components/Controls/Controls";
 import _ from "lodash";
 import YouTube from "react-youtube";
 import {invalidateVideo, fetchVideoIfNeeded} from "../actions/videos";
-import AppBar from "material-ui/AppBar";
-import Search from "../components/Search/Search";
+import Header from "../components/Header/Header";
 
 class App extends Component {
     constructor(props) {
         super(props);
         this.handleChange = this.handleChange.bind(this);
-        this.handleRefreshClick = this.handleRefreshClick.bind(this)
+        this.handleRefreshClick = this.handleRefreshClick.bind(this);
+        this.onSubmit = this.onSubmit.bind(this);
         this.state = {
             playingId: 0,
             isPlaying: false,
@@ -38,6 +38,11 @@ class App extends Component {
         }
     }
 
+    shouldComponentUpdate(nextProps) {
+        console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!", nextProps);
+        return !!nextProps.videos.length;
+    }
+
     handleChange(nextArtist) {
         this.props.dispatch(selectArtist(nextArtist));
     }
@@ -51,9 +56,16 @@ class App extends Component {
 
         dispatch(invalidateSongs(selectedArtist));
         dispatch(fetchSongsIfNeeded(selectedArtist));
+    }
 
-        dispatch(invalidateVideo(selectedArtist));
-        dispatch(fetchVideoIfNeeded(selectedArtist));
+    onSubmit(selectedArtist) {
+        // On icon click and enter click
+        const {dispatch} = this.props;
+        dispatch(invalidateArtist(selectedArtist));
+        dispatch(fetchArtistsIfNeeded(selectedArtist));
+
+        dispatch(invalidateSongs(selectedArtist));
+        dispatch(fetchSongsIfNeeded(selectedArtist));
     }
 
     play(index) {
@@ -155,7 +167,7 @@ class App extends Component {
     renderPlaylist() {
         const {artists, isFetching, videos} = this.props;
 
-        if (artists.length === 0) {
+        if (videos.length === 0) {
             if (isFetching) {
                 return (<h6>Loading...</h6>);
             } else {
@@ -184,6 +196,10 @@ class App extends Component {
             }
         };
 
+        if (videos.length === 0) {
+            return null;
+        }
+
         return (
             <div
                 style={{
@@ -208,28 +224,28 @@ class App extends Component {
     render() {
         const {isFetching} = this.props;
 
+        const style = {} || {
+            padding: 0,
+            margin: 0,
+            display: "flex",
+        };
+
         return (
             <div>
                 {/*<Picker value={selectedArtist}*/}
                 {/*onChange={this.handleChange}*/}
                 {/*options={['Mono', 'frontend']}*/}
                 {/*/>*/}
-                <AppBar
-                    style={{
-                        color: 'white !important',
-                    }}
+                <Header
+                    onSubmit={this.onSubmit}
+                />
+                <section
+                    style={style}
                 >
-                    <Search/>
-                </AppBar>
-                <section style={{
-                    padding: 0,
-                    margin: 0,
-                    display: "flex",
-                }}>
                     {this.renderPlaylist()}
                     {this.renderPlayer()}
                 </section>
-                {!isFetching ? <h6><a href='#' onClick={this.handleRefreshClick}> Refresh</a></h6> : null}
+                {<h6><a href='#' onClick={this.handleRefreshClick}> Refresh</a></h6>}
                 {this.renderControls()}
             </div>
         )
@@ -237,13 +253,17 @@ class App extends Component {
 }
 
 App.propTypes = {
-    selectedArtist: PropTypes.string.isRequired,
+    selectedArtist: PropTypes.string,
     artists: PropTypes.array.isRequired,
     videos: PropTypes.array.isRequired,
     songs: PropTypes.array.isRequired,
     isFetching: PropTypes.bool.isRequired,
     lastUpdated: PropTypes.number,
     dispatch: PropTypes.func.isRequired
+};
+
+App.defaultProps = {
+  selectedArtist: null,
 };
 
 function mapStateToProps(state) {

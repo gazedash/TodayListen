@@ -1,33 +1,37 @@
-import React, {
-    PropTypes,
-} from 'react';
+import React, {PropTypes, Component} from "react";
 import TextField from "material-ui/TextField";
-import './Search.css'
+import "./Search.css";
 
-const Search = React.createClass({
+export default class Search extends Component {
     render() {
         return (
-            <TextField
-                className="search"
-                fullWidth={true}
-                inputStyle={{
-                    color: '#fff !important',
-                }}
-                style={{
-                    marginTop: 8,
-                }}
-                underlineStyle={{
-                    display: 'none',
-                }}
-                underlineFocusStyle={{
-                    backgroundColor: '#fff',
-                    height: 2,
-                    display: 'block',
-                }}
-            />
-
+                <TextField
+                    value={this.props.value}
+                    onChange={this.props.onChange}
+                    onKeyPress={this.props.onKeyPress}
+                    className="search"
+                    fullWidth={true}
+                    inputStyle={{
+                        color: '#fff !important',
+                    }}
+                    style={{
+                        marginTop: 8,
+                    }}
+                    underlineStyle={{
+                        display: 'none',
+                    }}
+                    underlineFocusStyle={{
+                        backgroundColor: '#fff',
+                        height: 2,
+                        display: 'block',
+                    }}
+                />
         );
     }
-});
+}
 
-export default Search;
+Search.PropTypes = {
+    onKeyPress: PropTypes.string.isRequired,
+    value: PropTypes.string.isRequired,
+    onChange: PropTypes.func.isRequired,
+};

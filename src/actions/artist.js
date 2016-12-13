@@ -54,7 +54,7 @@ function fetchArtists(artist) {
 function shouldFetchArtists(state, artist) {
     // TODO: check
     const artists = _.get(state, `suggestedArtists.${artist}`);
-    if (!artists) {
+    if (!artists && _.isString(artist) && artist) {
         return true;
     } else if (state.isFetching) {
         return false;

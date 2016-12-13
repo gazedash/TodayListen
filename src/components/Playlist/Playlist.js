@@ -48,10 +48,15 @@ export default class Playlist extends Component {
 }
 
 Playlist.propTypes = {
-    onClick: PropTypes.func,
-    isPlaying: PropTypes.bool,
-    playingId: PropTypes.number,
+    onClick: PropTypes.func.isRequired,
+    isPlaying: PropTypes.bool.isRequired,
+    playingId: PropTypes.number.isRequired,
     opts: PropTypes.object,
     style: PropTypes.object,
     items: PropTypes.array.isRequired
+};
+
+Playlist.defaultProps = {
+    style: null,
+    opts: null,
 };

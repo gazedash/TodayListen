@@ -5,7 +5,7 @@ import {
     REQUEST_SIMILAR_ARTISTS
 } from '../actions/artist';
 
-export function selectedArtist(state = 'Mono', action) {
+export function selectedArtist(state = null, action) {
     switch (action.type) {
         case SELECT_ARTIST:
             return action.artist;

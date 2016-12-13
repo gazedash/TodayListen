@@ -1,7 +1,7 @@
 import React, {PropTypes} from "react";
 import IconButton from "material-ui/IconButton";
-import {Toolbar, ToolbarGroup} from "material-ui/Toolbar";
-import {BottomNavigation, BottomNavigationItem} from "material-ui/BottomNavigation";
+import {ToolbarGroup} from "material-ui/Toolbar";
+import {BottomNavigation} from "material-ui/BottomNavigation";
 import Paper from 'material-ui/Paper';
 import "./Controls.css";
 
@@ -56,6 +56,10 @@ Controls.propTypes = {
     play: PropTypes.func.isRequired,
     style: PropTypes.object,
     isPlaying: PropTypes.bool.isRequired,
+};
+
+Controls.defaultProps = {
+  style: null,
 };
 
 export default Controls;
