@@ -9,6 +9,7 @@ const Controls = React.createClass({
     render() {
         const {isPlaying, style} = this.props;
         const largeIcon = {
+            color: 'white',
             fontSize: 40,
         };
 

@@ -69,16 +69,18 @@ class App extends Component {
     }
 
     play(index) {
-        const player = this.refs.youtube.internalPlayer;
-        if (this.state.isPlaying) {
-            player.pauseVideo();
-        } else {
-            player.playVideo();
+        const player = _.get(this.refs, 'youtube.internalPlayer');
+        if (player) {
+            if (this.state.isPlaying) {
+                player.pauseVideo();
+            } else {
+                player.playVideo();
+            }
+            this.setState((prevState) => ({
+                playingId: index ? index : prevState.playingId,
+                isPlaying: !prevState.isPlaying,
+            }));
         }
-        this.setState((prevState) => ({
-            playingId: index ? index : prevState.playingId,
-            isPlaying: !prevState.isPlaying,
-        }));
     }
 
     loadVideo(offset, play) {
@@ -244,9 +246,11 @@ class App extends Component {
                 >
                     {this.renderPlaylist()}
                     {this.renderPlayer()}
+                    {<h6><a href='#' onClick={this.handleRefreshClick}> Refresh</a></h6>}
                 </section>
-                {<h6><a href='#' onClick={this.handleRefreshClick}> Refresh</a></h6>}
-                {this.renderControls()}
+                <section>
+                    {this.renderControls()}
+                </section>
             </div>
         )
     }
