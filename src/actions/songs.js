@@ -38,7 +38,8 @@ function fetchSongs(artist) {
                 return response.json();
             })
             .then(json => {
-                const songs = _.map(_.get(json, 'toptracks.track', []), (song) => {
+                const songs = _.map(_.get(json, ['toptracks', 'track'], []), (song) => {
+                    // if song = ''?
                     const query = artist + " - " + song.name;
                     dispatch(fetchVideoIfNeeded(query));
                     return query;
@@ -50,7 +51,7 @@ function fetchSongs(artist) {
 
 function shouldFetchSongs(state, artist) {
     // TODO: check
-    const songs = _.get(state, `suggestedSongs.${artist}`);
+    const songs = _.get(state, ['suggestedSongs', artist]);
     if (!songs && _.isString(artist) && artist) {
         return true;
     } else if (state.isFetching) {

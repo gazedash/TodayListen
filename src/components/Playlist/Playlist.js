@@ -34,6 +34,9 @@ export default class Playlist extends Component {
 
                     return (
                         <ListItem
+                            style={{
+                                fontSize: 14,
+                            }}
                             onClick={this.props.onClick.bind(this, i)}
                             leftIcon={playingIcon}
                             key={i}

@@ -84,34 +84,36 @@ class App extends Component {
 
     loadVideo(offset, play) {
         const {isPlaying, playingId} = this.state;
-        const player = this.refs.youtube.internalPlayer;
-        if (offset !== playingId) {
-            const {videos} = this.props;
-            const videoId = videos[offset].items[0];
-            player.loadVideoByUrl(`https://www.youtube.com/v/${videoId}?version=3`).then(() => {
-                if (isPlaying || play) {
-                    if (play) {
-                        this.setState({
-                            playingId: offset,
-                            isPlaying: true,
-                        })
+        const player = _.get(this.refs, ['youtube', 'internalPlayer']);
+        if (player) {
+            if (offset !== playingId) {
+                const {videos} = this.props;
+                const videoId = videos[offset].items[0];
+                player.loadVideoByUrl(`https://www.youtube.com/v/${videoId}?version=3`).then(() => {
+                    if (isPlaying || play) {
+                        if (play) {
+                            this.setState({
+                                playingId: offset,
+                                isPlaying: true,
+                            })
+                        }
+                        player.playVideo();
                     }
-                    player.playVideo();
-                }
-            });
-        } else {
-            if (isPlaying) {
-                player.pauseVideo();
-                // player.playVideo();
-                this.setState((prevState) => ({
-                    isPlaying: !isPlaying,
-                }));
+                });
             } else {
-                player.playVideo();
-                this.setState((prevState) => ({
-                    playingId: offset ? offset : prevState.playingId,
-                    isPlaying: !isPlaying,
-                }));
+                if (isPlaying) {
+                    player.pauseVideo();
+                    // player.playVideo();
+                    this.setState((prevState) => ({
+                        isPlaying: !isPlaying,
+                    }));
+                } else {
+                    player.playVideo();
+                    this.setState((prevState) => ({
+                        playingId: offset ? offset : prevState.playingId,
+                        isPlaying: !isPlaying,
+                    }));
+                }
             }
         }
     }

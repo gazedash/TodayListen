@@ -21,7 +21,7 @@ function requestVideo(query) {
 
 function receiveVideo(query, json) {
     const videos = _.map(_.get(json, "items"), (video) => {
-        return _.get(video, "id.videoId");
+        return _.get(video, ["id", "videoId"]);
     });
 
     return {
@@ -46,7 +46,7 @@ function fetchVideo(query) {
 
 function shouldFetchVideo(state, query) {
     // TODO: check
-    const songs = _.get(state, `suggestedVideo.${query}`);
+    const songs = _.get(state, ['suggestedVideo', query]);
     if (!songs && _.isString(query) && query) {
         return true;
     } else if (state.isFetching) {

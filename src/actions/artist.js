@@ -33,7 +33,7 @@ function receiveSimilar(artist, json) {
     return {
         type: RECEIVE_SIMILAR_ARTISTS,
         artist,
-        posts: _.get(json, 'similarartists.artist', []),
+        posts: _.get(json, ['similarartists', 'artist'], []),
         receivedAt: Date.now(),
         ...json,
     }
@@ -53,7 +53,7 @@ function fetchArtists(artist) {
 
 function shouldFetchArtists(state, artist) {
     // TODO: check
-    const artists = _.get(state, `suggestedArtists.${artist}`);
+    const artists = _.get(state, ['suggestedArtists', artist]);
     if (!artists && _.isString(artist) && artist) {
         return true;
     } else if (state.isFetching) {
