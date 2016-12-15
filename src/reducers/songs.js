@@ -13,7 +13,8 @@ function songs(state = {
             };
         case REQUEST_POPULAR_SONGS:
             return {
-                ...state, isFetching: true,
+                ...state,
+                isFetching: true,
                 didInvalidate: false,
             };
         case RECEIVE_POPULAR_SONGS:

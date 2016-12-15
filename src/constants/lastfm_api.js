@@ -15,11 +15,13 @@ export class LastFm {
     };
 
     getSimilarArtists(artist) {
-        return `${this.buildQuery(GET_SIMILAR_ARTISTS)}&artist=${artist}&limit=3`;
+        const encodedArtist = encodeURIComponent(artist);
+        return `${this.buildQuery(GET_SIMILAR_ARTISTS)}&artist=${encodedArtist}&limit=3`;
     }
 
     getPopularSongs(artist) {
-        return `${this.buildQuery(GET_POPULAR_TRACKS)}&artist=${artist}&autocorrect=0&limit=10`
+        const encodedArtist = encodeURIComponent(artist);
+        return `${this.buildQuery(GET_POPULAR_TRACKS)}&artist=${encodedArtist}&autocorrect=0&limit=10`
     }
 }
 

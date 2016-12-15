@@ -5,7 +5,7 @@ import {
     REQUEST_SIMILAR_ARTISTS
 } from '../actions/artist';
 
-export function selectedArtist(state = null, action) {
+export function selectedArtist(state = 'Mono', action) {
     switch (action.type) {
         case SELECT_ARTIST:
             return action.artist;
@@ -33,7 +33,7 @@ function songs(state = {
             return {...state,
                 isFetching: false,
                 didInvalidate: false,
-                items: action.posts,
+                items: action.items,
                 lastUpdated: action.receivedAt,
             };
         default:

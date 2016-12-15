@@ -1,44 +1,50 @@
 import React, {PropTypes, Component} from "react";
-import IconButton from 'material-ui/IconButton';
-import {List, ListItem} from 'material-ui/List';
+import IconButton from "material-ui/IconButton";
+import {List, ListItem} from "material-ui/List";
 import "./Playlist.css";
 
 export default class Playlist extends Component {
-    render() {
+    renderIcon(id) {
         const {isPlaying, playingId} = this.props;
 
+        if (playingId === id) {
+            return (<IconButton
+                iconClassName={isPlaying ? "fa fa-pause" : "fa fa-play-circle"}
+                style={{
+                    padding: "0px",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                }}
+            />);
+        }
+
+        return (
+            <span style={{
+                color: "#aaa",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+            }}>
+                {id + 1}
+            </span>
+        );
+    }
+
+    render() {
         return (
             <List
                 style={this.props.style}
                 className="playlist"
             >
                 {this.props.items.map((song, i) => {
-                    let playingIcon = <span style={{
-                        color: "#aaa",
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                    }}>{i+1}</span>;
-                    if (playingId === i) {
-                        playingIcon = (<IconButton
-                            iconClassName={isPlaying? "fa fa-pause" : "fa fa-play-circle"}
-                            style={{
-                                padding: "0px",
-                                display: "flex",
-                                justifyContent: "center",
-                                alignItems: "center",
-                            }}
-                            onClick={() => this.props.play()}
-                        />)
-                    }
-
                     return (
                         <ListItem
                             style={{
                                 fontSize: 14,
                             }}
                             onClick={this.props.onClick.bind(this, i)}
-                            leftIcon={playingIcon}
+                            leftIcon={this.renderIcon(i)}
                             key={i}
                         >
                             {song.query}

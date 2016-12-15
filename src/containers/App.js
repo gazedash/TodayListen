@@ -6,7 +6,6 @@ import Playlist from "../components/Playlist/Playlist";
 import Controls from "../components/Controls/Controls";
 import _ from "lodash";
 import YouTube from "react-youtube";
-import {invalidateVideo, fetchVideoIfNeeded} from "../actions/videos";
 import Header from "../components/Header/Header";
 
 class App extends Component {
@@ -14,7 +13,7 @@ class App extends Component {
         super(props);
         this.handleChange = this.handleChange.bind(this);
         this.handleRefreshClick = this.handleRefreshClick.bind(this);
-        this.onSubmit = this.onSubmit.bind(this);
+        this.onSearch = this.onSearch.bind(this);
         this.state = {
             playingId: 0,
             isPlaying: false,
@@ -50,21 +49,26 @@ class App extends Component {
         e.preventDefault();
 
         const {dispatch, selectedArtist} = this.props;
-        dispatch(invalidateArtist(selectedArtist));
-        dispatch(fetchArtistsIfNeeded(selectedArtist));
 
-        dispatch(invalidateSongs(selectedArtist));
-        dispatch(fetchSongsIfNeeded(selectedArtist));
+        if (selectedArtist) {
+            dispatch(invalidateArtist(selectedArtist));
+            dispatch(fetchArtistsIfNeeded(selectedArtist));
+
+            dispatch(invalidateSongs(selectedArtist));
+            dispatch(fetchSongsIfNeeded(selectedArtist));
+        }
     }
 
-    onSubmit(selectedArtist) {
+    onSearch(selectedArtist) {
         // On icon click and enter click
         const {dispatch} = this.props;
-        dispatch(invalidateArtist(selectedArtist));
-        dispatch(fetchArtistsIfNeeded(selectedArtist));
+        dispatch(selectArtist(selectedArtist));
 
-        dispatch(invalidateSongs(selectedArtist));
-        dispatch(fetchSongsIfNeeded(selectedArtist));
+        // dispatch(invalidateArtist(selectedArtist));
+        // dispatch(fetchArtistsIfNeeded(selectedArtist));
+        //
+        // dispatch(invalidateSongs(selectedArtist));
+        // dispatch(fetchSongsIfNeeded(selectedArtist));
     }
 
     play(index) {
@@ -168,15 +172,16 @@ class App extends Component {
 
 
     renderPlaylist() {
-        const {artists, isFetching, videos} = this.props;
+        const {isFetching, videos} = this.props;
 
-        if (videos.length === 0) {
-            if (isFetching) {
-                return (<h6>Loading...</h6>);
-            } else {
-                return (<h6>Empty.</h6>);
-            }
+        // if (videos.length === 0) {
+        if (isFetching) {
+            return (<h6>Loading...</h6>);
         }
+        // else {
+        //         return (<h6>Empty.</h6>);
+        //     }
+        // }
 
         return (
             <Playlist
@@ -225,12 +230,10 @@ class App extends Component {
     }
 
     render() {
-        const {isFetching} = this.props;
-
         const style = {
             padding: 0,
             margin: 0,
-            marginTop: 65,
+            marginTop: 44,
         };
 
         return (
@@ -240,17 +243,25 @@ class App extends Component {
                 {/*options={['Mono', 'frontend']}*/}
                 {/*/>*/}
                 <Header
-                    onSubmit={this.onSubmit}
+                    items={this.props.artists.map((artist) => {
+                        return ({image: artist.image[2]["#text"], ...artist})
+                    })}
+                    onSearch={this.onSearch}
                 />
                 <section
                     style={style}
                 >
                     {this.renderPlaylist()}
+
+                    {/*{this.props.artists.map((artist) => {*/}
+                        {/*return (<img src={artist.image[2]["#text"]} key={artist.name}/>)*/}
+                    {/*})}*/}
+
                     {this.renderPlayer()}
                     {<h6><a href='#' onClick={this.handleRefreshClick}> Refresh</a></h6>}
                 </section>
                 <footer style={{
-                    marginTop: 56,
+                    marginTop: 26,
                 }}>
                     {this.renderControls()}
                 </footer>
@@ -270,7 +281,7 @@ App.propTypes = {
 };
 
 App.defaultProps = {
-  selectedArtist: null,
+    selectedArtist: null,
 };
 
 function mapStateToProps(state) {
@@ -280,7 +291,7 @@ function mapStateToProps(state) {
         lastUpdated,
         items: artists
     } = suggestedArtists[selectedArtist] || {
-        isFetching: true,
+        isFetching: false,
         items: []
     };
 
@@ -289,7 +300,7 @@ function mapStateToProps(state) {
         songsLastUpdated,
         items: songs
     } = popularSongs[selectedArtist] || {
-        isFetching: true,
+        isFetching: false,
         items: []
     };
 

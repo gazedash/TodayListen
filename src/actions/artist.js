@@ -33,7 +33,7 @@ function receiveSimilar(artist, json) {
     return {
         type: RECEIVE_SIMILAR_ARTISTS,
         artist,
-        posts: _.get(json, ['similarartists', 'artist'], []),
+        items: _.get(json, ['similarartists', 'artist'], []),
         receivedAt: Date.now(),
         ...json,
     }

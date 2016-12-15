@@ -1,0 +1,10 @@
+.artist-picker {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+
+.artist-picker > div {
+    width: 66%;
+}

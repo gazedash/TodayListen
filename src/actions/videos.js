@@ -46,8 +46,8 @@ function fetchVideo(query) {
 
 function shouldFetchVideo(state, query) {
     // TODO: check
-    const songs = _.get(state, ['suggestedVideo', query]);
-    if (!songs && _.isString(query) && query) {
+    const video = _.get(state, ['suggestedVideo', query]);
+    if (!video && _.isString(query) && query) {
         return true;
     } else if (state.isFetching) {
         return false;
