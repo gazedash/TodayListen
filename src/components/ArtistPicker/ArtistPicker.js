@@ -4,6 +4,7 @@ import FlatButton from "material-ui/FlatButton";
 import IconButton from "material-ui/IconButton";
 import {List, ListItem} from "material-ui/List";
 import "./ArtistPicker.css";
+import ImageLoader from 'react-imageloader';
 
 export default class ArtistPicker extends React.Component {
     constructor(props) {
@@ -22,17 +23,77 @@ export default class ArtistPicker extends React.Component {
         }));
     }
 
+    renderImage(artist) {
+        // let imageStyle = {
+        //     alignSelf: 'center',
+        // };
+
+        let imageStyle = {
+            display: 'flex',
+            alignSelf: 'center',
+            height: 174,
+            width: 174,
+        };
+
+        if (artist.image[2]["#text"] === '') {
+            // imageStyle = {
+            //     display: 'flex',
+            //     alignSelf: 'center',
+            //     height: 174,
+            //     width: 174,
+            // };
+            return (
+                <div style={imageStyle}>
+                    <i style={{
+                        alignSelf: 'center',
+                        alignItems: 'center',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        flex: 1,
+                    }}
+                       className="fa fa-4x fa-question"
+                    />
+                </div>
+            )
+        }
+
+        return (
+            <ImageLoader
+                style={{
+                    alignSelf: 'center',
+                }}
+                src={artist.image[2]["#text"]}
+                wrapper={React.DOM.div}
+                preloader={() => <div style={imageStyle}>
+                    <i style={{
+                        alignSelf: 'center',
+                        alignItems: 'center',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        flex: 1,
+                    }}
+                    className="fa fa-4x fa-question"
+                    />
+                    </div>}>
+                Image load failed!
+            </ImageLoader>
+        )
+    }
+
     renderItem(artist, index) {
         const {selectedId, isSelected} = this.state;
+
         let itemStyle = {
             fontSize: 14,
         };
+
         if (selectedId === index && isSelected) {
             itemStyle = {
                 backgroundColor: '#55d680',
                 fontSize: 14,
             }
         }
+
 
         return (
             <ListItem
@@ -43,16 +104,13 @@ export default class ArtistPicker extends React.Component {
             >
                 <div
                     style={{
+                        maxWidth: 174,
                         display: 'flex',
                         flexDirection: 'column',
                         minHeight: 230,
                     }}
                 >
-                    <img style={{
-                        alignSelf: 'center',
-                    }}
-                         alt={artist.name}
-                         src={artist.image[2]["#text"]}/>
+                    {this.renderImage(artist)}
                     <div style={{
                         textAlign: 'center',
                         marginTop: 8,
@@ -109,7 +167,6 @@ export default class ArtistPicker extends React.Component {
                     }}
                     className="artist-picker"
                     title="Pick artist"
-                    titleStyle={{}}
                     actions={actions}
                     modal={false}
                     open={this.props.isOpen}
