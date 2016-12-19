@@ -24,10 +24,6 @@ export default class ArtistPicker extends React.Component {
     }
 
     renderImage(artist) {
-        // let imageStyle = {
-        //     alignSelf: 'center',
-        // };
-
         let imageStyle = {
             display: 'flex',
             alignSelf: 'center',
@@ -36,12 +32,6 @@ export default class ArtistPicker extends React.Component {
         };
 
         if (artist.image[2]["#text"] === '') {
-            // imageStyle = {
-            //     display: 'flex',
-            //     alignSelf: 'center',
-            //     height: 174,
-            //     width: 174,
-            // };
             return (
                 <div style={imageStyle}>
                     <i style={{
@@ -84,11 +74,15 @@ export default class ArtistPicker extends React.Component {
         const {selectedId, isSelected} = this.state;
 
         let itemStyle = {
+            justifyContent: 'center',
+            display: 'flex',
             fontSize: 14,
         };
 
         if (selectedId === index && isSelected) {
             itemStyle = {
+                justifyContent: 'center',
+                display: 'flex',
                 backgroundColor: '#55d680',
                 fontSize: 14,
             }
@@ -96,11 +90,17 @@ export default class ArtistPicker extends React.Component {
 
 
         return (
+            <div
+                key={index}
+                style={{
+                    flexGrow: 1,
+                    minWidth: '25%',
+                }}
+            >
             <ListItem
                 style={itemStyle}
                 leftIcon={null}
                 onClick={() => this.onArtistClick(index)}
-                key={index}
             >
                 <div
                     style={{
@@ -117,7 +117,7 @@ export default class ArtistPicker extends React.Component {
                     }}>{artist.name}</div>
                 </div>
             </ListItem>
-
+            </div>
         )
     }
 
@@ -150,6 +150,10 @@ export default class ArtistPicker extends React.Component {
             padding: 0,
         };
 
+
+        // List
+        // justifyContent: 'center',
+
         return (
             <div style={{
                 display: 'flex',
@@ -164,6 +168,11 @@ export default class ArtistPicker extends React.Component {
                 <Dialog
                     bodyStyle={{
                         paddingBottom: 0,
+                        overflowY: 'scroll',
+                    }}
+                    contentClassName="artist-picker content"
+                    contentStyle={{
+                        width: 'fit-content',
                     }}
                     className="artist-picker"
                     title="Pick artist"
@@ -172,11 +181,11 @@ export default class ArtistPicker extends React.Component {
                     open={this.props.isOpen}
                     onRequestClose={this.props.onClose}
                 >
-
                     <List
                         style={{
                             paddingTop: 0,
                             display: 'flex',
+                            flexWrap: 'wrap',
                         }}
                     >
                         {items.map((artist, i) => {
