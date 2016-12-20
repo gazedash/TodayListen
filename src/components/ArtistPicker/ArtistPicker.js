@@ -4,7 +4,7 @@ import FlatButton from "material-ui/FlatButton";
 import IconButton from "material-ui/IconButton";
 import {List, ListItem} from "material-ui/List";
 import "./ArtistPicker.css";
-import ImageLoader from 'react-imageloader';
+import ImageLoader from "react-imageloader";
 
 export default class ArtistPicker extends React.Component {
     constructor(props) {

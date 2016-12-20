@@ -3,8 +3,7 @@ import {lastFm} from "../api/lastfm_api";
 import {take, put, call, fork, select} from "redux-saga/effects";
 import {takeEvery} from "redux-saga";
 import * as actions from "../actions/artist";
-import * as songs from "../actions/songs";
-import {selectedArtistSelector, suggestedArtistSelector} from "../selectors/index";
+import {selectedArtistSelector, suggestedArtistsSelector} from "../selectors/index";
 import {fetchVideo} from "./videos";
 import {fetchSongs} from "./songs";
 
@@ -29,7 +28,7 @@ export function* nextArtistChange() {
         yield take(actions.SELECT_ARTIST);
 
         const newArtist = yield select(selectedArtistSelector);
-        const suggestedArtists = yield select(suggestedArtistSelector);
+        const suggestedArtists = yield select(suggestedArtistsSelector);
         if (prevArtist !== newArtist && !suggestedArtists[newArtist]) {
             yield fork(mainSaga, newArtist);
         }

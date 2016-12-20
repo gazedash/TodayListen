@@ -16,7 +16,7 @@ export class LastFm {
 
     getSimilarArtists(artist) {
         const encodedArtist = encodeURIComponent(artist);
-        return `${this.buildQuery(GET_SIMILAR_ARTISTS)}&artist=${encodedArtist}&limit=3`;
+        return `${this.buildQuery(GET_SIMILAR_ARTISTS)}&artist=${encodedArtist}&limit=4`;
     }
 
     getPopularSongs(artist) {

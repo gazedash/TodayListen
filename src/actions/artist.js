@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import _ from "lodash";
 
 export const REQUEST_SIMILAR_ARTISTS = 'REQUEST_SIMILAR_ARTISTS';
 export const RECEIVE_SIMILAR_ARTISTS = 'RECEIVE_SIMILAR_ARTISTS';

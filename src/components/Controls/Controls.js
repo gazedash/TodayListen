@@ -2,7 +2,7 @@ import React, {PropTypes} from "react";
 import IconButton from "material-ui/IconButton";
 import {ToolbarGroup} from "material-ui/Toolbar";
 import {BottomNavigation} from "material-ui/BottomNavigation";
-import Paper from 'material-ui/Paper';
+import Paper from "material-ui/Paper";
 import "./Controls.css";
 
 const Controls = React.createClass({

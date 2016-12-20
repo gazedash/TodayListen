@@ -7,6 +7,7 @@ import Controls from "../components/Controls/Controls";
 import _ from "lodash";
 import YouTube from "react-youtube";
 import Header from "../components/Header/Header";
+import Spinner from "halogen/ScaleLoader";
 
 class App extends Component {
     constructor(props) {
@@ -20,23 +21,6 @@ class App extends Component {
         }
     }
 
-    componentDidMount() {
-        const {dispatch, selectedArtist} = this.props;
-
-        // dispatch(fetchArtistsIfNeeded(selectedArtist));
-
-        // dispatch(fetchSongsIfNeeded(selectedArtist));
-    }
-
-    componentWillReceiveProps(nextProps) {
-        if (nextProps.selectedArtist !== this.props.selectedArtist) {
-            const {dispatch, selectedArtist} = nextProps;
-            // dispatch(fetchArtistsIfNeeded(selectedArtist));
-
-            // dispatch(fetchSongsIfNeeded(selectedArtist))
-        }
-    }
-
     shouldComponentUpdate(nextProps) {
         return !!nextProps.videos.length;
     }
@@ -46,7 +30,6 @@ class App extends Component {
     }
 
     handleRefreshClick(e) {
-        // TODO: INSANE (REFRESHE!!!)!)!
         e.preventDefault();
 
         const {dispatch, selectedArtist} = this.props;
@@ -61,15 +44,8 @@ class App extends Component {
     }
 
     onSearch(selectedArtist) {
-        // On icon click and enter click
         const {dispatch} = this.props;
         dispatch(selectArtist(selectedArtist));
-
-        // dispatch(invalidateArtist(selectedArtist));
-        // dispatch(fetchArtistsIfNeeded(selectedArtist));
-        //
-        // dispatch(invalidateSongs(selectedArtist));
-        // dispatch(fetchSongsIfNeeded(selectedArtist));
     }
 
     play(index) {
@@ -173,26 +149,33 @@ class App extends Component {
 
 
     renderPlaylist() {
-        const {isFetching, videos} = this.props;
-
-        // if (videos.length === 0) {
-
-        if (isFetching) {
-            return (<h6>Loading...</h6>);
-        }
-
-        // else {
-        //         return (<h6>Empty.</h6>);
-        //     }
-        // }
+        const {songsFetching, videos} = this.props;
+        const spinner = (songsFetching ? (
+                <div style={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                }}>
+                    <div style={{
+                        position: 'absolute',
+                        top: '40%',
+                    }}>
+                        <Spinner color="#000" size="50px" margin="4px"/>
+                    </div>
+                </div>
+            ) : videos.length === 0 ? <h3 style={{
+                margin: '50px 10px 10px',
+                }}>The list is empty.</h3> : null);
 
         return (
-            <Playlist
-                onClick={(i) => this.loadVideo(i, true)}
-                items={videos}
-                isPlaying={this.state.isPlaying}
-                playingId={this.state.playingId}
-            />
+            <div>
+                {spinner}
+                <Playlist
+                    onClick={(i) => this.loadVideo(i, true)}
+                    items={videos}
+                    isPlaying={this.state.isPlaying}
+                    playingId={this.state.playingId}
+                />
+            </div>
         )
     }
 
@@ -232,7 +215,17 @@ class App extends Component {
         )
     }
 
-    render() {
+    renderFooter() {
+        return (
+            <footer style={{
+                marginTop: 26,
+            }}>
+                {this.renderControls()}
+            </footer>
+        )
+    }
+
+    renderPage() {
         const style = {
             padding: 0,
             margin: 0,
@@ -240,34 +233,29 @@ class App extends Component {
         };
 
         return (
+            <section
+                style={style}
+            >
+                {this.renderPlaylist()}
+                {this.renderPlayer()}
+                {<h6><a href='#' onClick={this.handleRefreshClick}> Refresh</a></h6>}
+            </section>
+        )
+    }
+
+    render() {
+        console.log(this.props.artists);
+
+        return (
             <div>
-                {/*<Picker value={selectedArtist}*/}
-                {/*onChange={this.handleChange}*/}
-                {/*options={['Mono', 'frontend']}*/}
-                {/*/>*/}
                 <Header
-                    items={this.props.artists.map((artist) => {
+                    items={this.props.suggestedArtists.map((artist) => {
                         return ({image: artist.image[2]["#text"], ...artist})
                     })}
                     onSearch={this.onSearch}
                 />
-                <section
-                    style={style}
-                >
-                    {this.renderPlaylist()}
-
-                    {/*{this.props.artists.map((artist) => {*/}
-                        {/*return (<img src={artist.image[2]["#text"]} key={artist.name}/>)*/}
-                    {/*})}*/}
-
-                    {this.renderPlayer()}
-                    {<h6><a href='#' onClick={this.handleRefreshClick}> Refresh</a></h6>}
-                </section>
-                <footer style={{
-                    marginTop: 26,
-                }}>
-                    {this.renderControls()}
-                </footer>
+                {this.renderPage()}
+                {this.renderFooter()}
             </div>
         )
     }
@@ -275,11 +263,12 @@ class App extends Component {
 
 App.propTypes = {
     selectedArtist: PropTypes.string,
-    artists: PropTypes.array.isRequired,
+    artists: PropTypes.object.isRequired,
+    suggestedArtists: PropTypes.array.isRequired,
     videos: PropTypes.array.isRequired,
     songs: PropTypes.array.isRequired,
-    isFetching: PropTypes.bool.isRequired,
-    lastUpdated: PropTypes.number,
+    artistsFetching: PropTypes.bool.isRequired,
+    songsFetching: PropTypes.bool.isRequired,
     dispatch: PropTypes.func.isRequired
 };
 
@@ -290,17 +279,17 @@ App.defaultProps = {
 function mapStateToProps(state) {
     const {selectedArtist, suggestedArtists, popularSongs, suggestedVideos: videos} = state;
     const {
-        isFetching,
-        lastUpdated,
-        items: artists
+        isFetching: artistsFetching,
+        lastUpdated: artistsLastUpdated,
+        items: suggestedArtistsList,
     } = suggestedArtists[selectedArtist] || {
         isFetching: false,
         items: []
     };
 
     const {
-        songsIsFetching,
-        songsLastUpdated,
+        isFetching: songsFetching,
+        lastUpdated: songsLastUpdated,
         items: songs
     } = popularSongs[selectedArtist] || {
         isFetching: false,
@@ -311,13 +300,14 @@ function mapStateToProps(state) {
         videos: _.map(videos, ((item) => {
             return item
         })),
+        suggestedArtists: suggestedArtistsList,
         selectedArtist,
-        artists,
+        artists: suggestedArtists,
+        artistsLastUpdated,
+        artistsFetching,
         songs,
-        songsIsFetching,
+        songsFetching,
         songsLastUpdated,
-        isFetching,
-        lastUpdated
     }
 }
 

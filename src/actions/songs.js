@@ -1,7 +1,3 @@
-import _ from "lodash";
-import {lastFm} from "../api/lastfm_api";
-import {fetchVideoIfNeeded} from "./videos";
-
 export const REQUEST_POPULAR_SONGS = 'REQUEST_POPULAR_SONGS';
 export const RECEIVE_POPULAR_SONGS = 'RECEIVE_POPULAR_SONGS';
 export const INVALIDATE_SONGS = 'INVALIDATE_SONGS';

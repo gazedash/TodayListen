@@ -1,7 +1,7 @@
 import fetch from "isomorphic-fetch";
 import _ from "lodash";
 import {youTube} from "../api/youtube_api";
-import {take, put, call, fork, select} from "redux-saga/effects";
+import {put, call, fork, select} from "redux-saga/effects";
 import * as actions from "../actions/videos";
 import {popularSongsSelector, suggestedVideosSelector, selectedArtistSelector} from "../selectors/index";
 import {takeEvery} from "redux-saga";

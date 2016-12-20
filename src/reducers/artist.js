@@ -1,11 +1,6 @@
-import {
-    INVALIDATE_ARTIST,
-    SELECT_ARTIST,
-    RECEIVE_SIMILAR_ARTISTS,
-    REQUEST_SIMILAR_ARTISTS
-} from '../actions/artist';
+import {INVALIDATE_ARTIST, SELECT_ARTIST, RECEIVE_SIMILAR_ARTISTS, REQUEST_SIMILAR_ARTISTS} from "../actions/artist";
 
-export function selectedArtist(state = 'Mono', action) {
+export function selectedArtist(state = '', action) {
     switch (action.type) {
         case SELECT_ARTIST:
             return action.artist;
@@ -14,7 +9,7 @@ export function selectedArtist(state = 'Mono', action) {
     }
 }
 
-function songs(state = {
+function artists(state = {
     isFetching: false,
     didInvalidate: false,
     items: [],
@@ -48,7 +43,7 @@ export function suggestedArtists(state = { }, action) {
         case REQUEST_SIMILAR_ARTISTS:
             return {
                 ...state,
-                [action.artist]: songs(state[action.artist], action),
+                [action.artist]: artists(state[action.artist], action),
             };
         default:
             return state;

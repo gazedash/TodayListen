@@ -1,11 +1,8 @@
-import React, {
-    Component,
-    PropTypes,
-} from 'react';
+import React, {Component, PropTypes} from "react";
 import AppBar from "material-ui/AppBar";
 import Search from "../../components/Search/Search";
 import IconButton from "material-ui/IconButton";
-import ArtistPicker from '../ArtistPicker/ArtistPicker';
+import ArtistPicker from "../ArtistPicker/ArtistPicker";
 
 export default class Header extends Component {
     constructor(props) {
