@@ -1,6 +1,6 @@
 import fetch from "isomorphic-fetch";
 import _ from "lodash";
-import {lastFm} from "../constants/lastfm_api";
+import {lastFm} from "../api/lastfm_api";
 import {take, put, call, fork, select} from "redux-saga/effects";
 import * as actions from "../actions/songs";
 import {selectedArtistSelector, popularSongsSelector} from "../selectors/index";
@@ -17,12 +17,8 @@ function fetchSongsApi(artist) {
 }
 
 export function* fetchSongs(artist) {
-    console.log('call', artist);
     yield put(actions.requestPopular(artist));
-    console.log('put!');
     const songs = yield call(fetchSongsApi, artist);
-    console.log(songs);
-    console.log('put');
     yield put(actions.receivePopular(artist, songs));
     return songs;
 }

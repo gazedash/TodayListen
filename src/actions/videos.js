@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import {youTube} from "../constants/youtube_api";
+import {youTube} from "../api/youtube_api";
 
 export const REQUEST_VIDEO = 'REQUEST_VIDEO';
 export const RECEIVE_VIDEO = 'RECEIVE_VIDEO';

@@ -1,5 +1,5 @@
 import _ from "lodash";
-import {lastFm} from "../constants/lastfm_api";
+import {lastFm} from "../api/lastfm_api";
 import {fetchVideoIfNeeded} from "./videos";
 
 export const REQUEST_POPULAR_SONGS = 'REQUEST_POPULAR_SONGS';

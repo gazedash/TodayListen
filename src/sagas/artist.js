@@ -1,5 +1,5 @@
 import fetch from "isomorphic-fetch";
-import {lastFm} from "../constants/lastfm_api";
+import {lastFm} from "../api/lastfm_api";
 import {take, put, call, fork, select} from "redux-saga/effects";
 import {takeEvery} from "redux-saga";
 import * as actions from "../actions/artist";
@@ -38,9 +38,7 @@ export function* nextArtistChange() {
 
 function* mainSaga(artist) {
     yield fork(fetchArtists, artist);
-    console.log('about to fetch songs');
     let songs = yield call(fetchSongs, artist);
-    console.log('fetched songs?', songs);
     if (songs) {
         yield songs.map(song => fork(fetchVideo, song));
     }
@@ -48,16 +46,10 @@ function* mainSaga(artist) {
 
 export function* startup() {
     const selectedArtist = yield select(selectedArtistSelector);
-    // yield fork(metaSaga, selectedArtist);
     if (selectedArtist !== '') {
         yield fork(mainSaga, selectedArtist);
     }
 }
-
-// export function* metaSaga(artist) {
-//     yield fork(fetchArtists, artist);
-//     const popularSongs = yield call(fetchSongs, artist);
-// }
 
 export default function* root() {
     yield fork(startup);

@@ -1,6 +1,6 @@
 import fetch from "isomorphic-fetch";
 import _ from "lodash";
-import {youTube} from "../constants/youtube_api";
+import {youTube} from "../api/youtube_api";
 import {take, put, call, fork, select} from "redux-saga/effects";
 import * as actions from "../actions/videos";
 import {popularSongsSelector, suggestedVideosSelector, selectedArtistSelector} from "../selectors/index";
@@ -20,6 +20,12 @@ export function* fetchVideo(query) {
     yield put(actions.receiveVideo(query, video));
 }
 
+export function* fetchVideosList (videos) {
+    yield videos.map((video) => {
+        return call(fetchVideo, video)
+    });
+}
+
 export function* invalidateVideos() {
     yield takeEvery(actions.INVALIDATE_VIDEO, fetchVideosList);
 }
@@ -34,16 +40,8 @@ export function* nextVideosChange() {
     }
 }
 
-export function* fetchVideosList (videos) {
-    console.log("????");
-    yield videos.map((video) => {
-       return call(fetchVideo, video)
-    });
-}
-
 export function* startup() {
     const songs = yield select(popularSongsSelector);
-    console.log("video saga", songs);
     if (!_.isEmpty(songs)) {
         yield fork(fetchVideosList, songs);
     }
