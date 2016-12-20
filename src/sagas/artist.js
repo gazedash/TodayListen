@@ -1,7 +1,6 @@
 import fetch from "isomorphic-fetch";
 import {lastFm} from "../api/lastfm_api";
 import {take, put, call, fork, select} from "redux-saga/effects";
-import {takeEvery} from "redux-saga";
 import * as actions from "../actions/artist";
 import {selectedArtistSelector, suggestedArtistsSelector} from "../selectors/index";
 import {fetchVideo} from "./videos";
@@ -19,7 +18,10 @@ function* fetchArtists(artist) {
 }
 
 export function* invalidateArtist() {
-    yield takeEvery(actions.INVALIDATE_ARTIST, fetchArtists);
+    while (true) {
+        const {artist} = yield take(actions.INVALIDATE_ARTIST);
+        yield call(fetchArtists, artist);
+    }
 }
 
 export function* nextArtistChange() {

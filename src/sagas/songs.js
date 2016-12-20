@@ -4,7 +4,6 @@ import {lastFm} from "../api/lastfm_api";
 import {take, put, call, fork, select} from "redux-saga/effects";
 import * as actions from "../actions/songs";
 import {selectedArtistSelector, popularSongsSelector} from "../selectors/index";
-import {takeEvery} from "redux-saga";
 
 function fetchSongsApi(artist) {
     const getPopular = lastFm.getPopularSongs(artist);
@@ -24,7 +23,10 @@ export function* fetchSongs(artist) {
 }
 
 export function* invalidateSongs() {
-    yield takeEvery(actions.INVALIDATE_SONGS, fetchSongs);
+    while (true) {
+        const {artist} = yield take(actions.INVALIDATE_SONGS);
+        yield call(fetchSongs, artist);
+    }
 }
 
 export function* nextSongsChange() {

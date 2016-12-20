@@ -1,7 +1,7 @@
 import fetch from "isomorphic-fetch";
 import _ from "lodash";
 import {youTube} from "../api/youtube_api";
-import {put, call, fork, select} from "redux-saga/effects";
+import {put, call, fork, select, take} from "redux-saga/effects";
 import * as actions from "../actions/videos";
 import {popularSongsSelector, suggestedVideosSelector, selectedArtistSelector} from "../selectors/index";
 import {takeEvery} from "redux-saga";
@@ -27,7 +27,10 @@ export function* fetchVideosList (videos) {
 }
 
 export function* invalidateVideos() {
-    yield takeEvery(actions.INVALIDATE_VIDEO, fetchVideosList);
+    while (true) {
+        const {query} = yield take(actions.INVALIDATE_VIDEO);
+        yield call(fetchVideosList, query);
+    }
 }
 
 export function* nextVideosChange() {
