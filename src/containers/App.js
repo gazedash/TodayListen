@@ -244,14 +244,21 @@ class App extends Component {
     }
 
     render() {
-        console.log(this.props.artists);
+        console.log(this.props.artists, this.props.suggestedArtists,
+            this.props.suggestedArtists.filter((artist) => {
+                console.log(this.props.artists[artist.name]);
+                return !this.props.artists[artist.name]
+            }));
 
         return (
             <div>
                 <Header
-                    items={this.props.suggestedArtists.map((artist) => {
-                        return ({image: artist.image[2]["#text"], ...artist})
-                    })}
+                    items={this.props.suggestedArtists.reduce((newArray, artist) => {
+                        if (!this.props.artists[artist.name] && newArray.length < 3) {
+                            newArray.push({image: artist.image[2]["#text"], ...artist});
+                        }
+                        return newArray;
+                    }, [])}
                     onSearch={this.onSearch}
                 />
                 {this.renderPage()}
