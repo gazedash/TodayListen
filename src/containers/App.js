@@ -1,7 +1,7 @@
 import React, {Component, PropTypes} from "react";
 import {connect} from "react-redux";
-import {selectArtist, fetchArtistsIfNeeded, invalidateArtist} from "../actions/artist";
-import {fetchSongsIfNeeded, invalidateSongs} from "../actions/songs";
+import {selectArtist, invalidateArtist} from "../actions/artist";
+import {invalidateSongs} from "../actions/songs";
 import Playlist from "../components/Playlist/Playlist";
 import Controls from "../components/Controls/Controls";
 import _ from "lodash";
@@ -23,17 +23,17 @@ class App extends Component {
     componentDidMount() {
         const {dispatch, selectedArtist} = this.props;
 
-        dispatch(fetchArtistsIfNeeded(selectedArtist));
+        // dispatch(fetchArtistsIfNeeded(selectedArtist));
 
-        dispatch(fetchSongsIfNeeded(selectedArtist));
+        // dispatch(fetchSongsIfNeeded(selectedArtist));
     }
 
     componentWillReceiveProps(nextProps) {
         if (nextProps.selectedArtist !== this.props.selectedArtist) {
             const {dispatch, selectedArtist} = nextProps;
-            dispatch(fetchArtistsIfNeeded(selectedArtist));
+            // dispatch(fetchArtistsIfNeeded(selectedArtist));
 
-            dispatch(fetchSongsIfNeeded(selectedArtist))
+            // dispatch(fetchSongsIfNeeded(selectedArtist))
         }
     }
 
@@ -46,16 +46,17 @@ class App extends Component {
     }
 
     handleRefreshClick(e) {
+        // TODO: INSANE (REFRESHE!!!)!)!
         e.preventDefault();
 
         const {dispatch, selectedArtist} = this.props;
 
         if (selectedArtist) {
             dispatch(invalidateArtist(selectedArtist));
-            dispatch(fetchArtistsIfNeeded(selectedArtist));
+            // dispatch(fetchArtistsIfNeeded(selectedArtist));
 
             dispatch(invalidateSongs(selectedArtist));
-            dispatch(fetchSongsIfNeeded(selectedArtist));
+            // dispatch(fetchSongsIfNeeded(selectedArtist));
         }
     }
 
@@ -175,9 +176,11 @@ class App extends Component {
         const {isFetching, videos} = this.props;
 
         // if (videos.length === 0) {
+
         if (isFetching) {
             return (<h6>Loading...</h6>);
         }
+
         // else {
         //         return (<h6>Empty.</h6>);
         //     }

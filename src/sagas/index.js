@@ -1,5 +1,12 @@
-import { take, put, call, fork, select } from 'redux-saga/effects';
+import artistSagas from "../sagas/artist";
+import songsSagas from "../sagas/songs";
+import videoSagas from "../sagas/videos";
+import {fork} from "redux-saga/effects";
 
 export default function* root() {
-    console.log('Hello Sagas!');
+    yield [
+        fork(artistSagas),
+        // fork(songsSagas),
+        // fork(videoSagas),
+    ]
 }

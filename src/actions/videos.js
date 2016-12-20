@@ -12,14 +12,14 @@ export function invalidateVideo(query) {
     }
 }
 
-function requestVideo(query) {
+export function requestVideo(query) {
     return {
         type: REQUEST_VIDEO,
         query,
     }
 }
 
-function receiveVideo(query, json) {
+export function receiveVideo(query, json) {
     const videos = _.map(_.get(json, "items"), (video) => {
         return _.get(video, ["id", "videoId"]);
     });
@@ -29,37 +29,5 @@ function receiveVideo(query, json) {
         query,
         videos,
         receivedAt: Date.now(),
-    }
-}
-
-function fetchVideo(query) {
-    return dispatch => {
-        dispatch(requestVideo(query));
-        const getQuery = youTube.search(query);
-        return fetch(getQuery)
-            .then(response => {
-                return response.json();
-            })
-            .then(json => dispatch(receiveVideo(query, json)));
-    }
-}
-
-function shouldFetchVideo(state, query) {
-    // TODO: check
-    const video = _.get(state, ['suggestedVideo', query]);
-    if (!video && _.isString(query) && query) {
-        return true;
-    } else if (state.isFetching) {
-        return false;
-    } else {
-        return state.didInvalidate;
-    }
-}
-
-export function fetchVideoIfNeeded(query) {
-    return (dispatch, getState) => {
-        if (shouldFetchVideo(getState(), query)) {
-            return dispatch(fetchVideo(query));
-        }
     }
 }
