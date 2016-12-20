@@ -1,5 +1,3 @@
-import _ from "lodash";
-
 export const REQUEST_VIDEO = 'REQUEST_VIDEO';
 export const RECEIVE_VIDEO = 'RECEIVE_VIDEO';
 export const INVALIDATE_VIDEO = 'INVALIDATE_VIDEO';
@@ -19,14 +17,15 @@ export function requestVideo(query) {
 }
 
 export function receiveVideo(query, json) {
-    const videos = _.map(_.get(json, "items"), (video) => {
-        return _.get(video, ["id", "videoId"]);
-    });
+    const {items = [], ...data} = json;
 
     return {
+        ...data,
         type: RECEIVE_VIDEO,
         query,
-        videos,
+        videos: items.map((video) => {
+            return video.id.videoId;
+        }),
         receivedAt: Date.now(),
     }
 }

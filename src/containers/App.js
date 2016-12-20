@@ -244,12 +244,6 @@ class App extends Component {
     }
 
     render() {
-        console.log(this.props.artists, this.props.suggestedArtists,
-            this.props.suggestedArtists.filter((artist) => {
-                console.log(this.props.artists[artist.name]);
-                return !this.props.artists[artist.name]
-            }));
-
         return (
             <div>
                 <Header

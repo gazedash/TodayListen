@@ -14,14 +14,14 @@ export class LastFm {
         return `${LAST_FM}/${this.version}/?method=${method}&api_key=${this.api_key}&format=json`
     };
 
-    getSimilarArtists(artist) {
+    getSimilarArtists(artist, limit = 5) {
         const encodedArtist = encodeURIComponent(artist);
-        return `${this.buildQuery(GET_SIMILAR_ARTISTS)}&artist=${encodedArtist}&limit=4`;
+        return `${this.buildQuery(GET_SIMILAR_ARTISTS)}&artist=${encodedArtist}&limit=${limit}`;
     }
 
-    getPopularSongs(artist) {
+    getPopularSongs(artist, limit = 10) {
         const encodedArtist = encodeURIComponent(artist);
-        return `${this.buildQuery(GET_POPULAR_TRACKS)}&artist=${encodedArtist}&autocorrect=0&limit=10`
+        return `${this.buildQuery(GET_POPULAR_TRACKS)}&artist=${encodedArtist}&autocorrect=0&limit=${limit}`
     }
 }
 

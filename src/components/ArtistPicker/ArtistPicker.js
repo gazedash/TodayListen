@@ -135,6 +135,7 @@ export default class ArtistPicker extends React.Component {
                 label="Let's go"
                 primary={true}
                 keyboardFocused={true}
+                disabled={!items.length}
                 onClick={() => this.props.onSubmit(items[selectedId].name)}
             />,
         ];

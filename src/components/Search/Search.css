@@ -1,8 +1,15 @@
 .search {
-    border: none;
-    border-radius: 3px;
-    background-color: rgba(0, 0, 0, 0.07) !important;
-    color: white !important;
+    background-color: rgba(0, 0, 0, 0.07);
+    display: flex;
     margin: 6px auto 6px auto;
     width: 50%;
+}
+
+.searchbar {
+    padding-right: 20px;
+    height: 100% !important;
+}
+
+.searchbar > input {
+    color: #fff !important;
 }

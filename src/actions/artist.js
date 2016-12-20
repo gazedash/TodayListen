@@ -1,4 +1,4 @@
-import _ from "lodash";
+import _ from 'lodash';
 
 export const REQUEST_SIMILAR_ARTISTS = 'REQUEST_SIMILAR_ARTISTS';
 export const RECEIVE_SIMILAR_ARTISTS = 'RECEIVE_SIMILAR_ARTISTS';
@@ -28,11 +28,14 @@ export function requestSimilar(artist) {
 }
 
 export function receiveSimilar(artist, json) {
+    const {similarartists, ...data} = json;
+
     return {
+        ...data,
         type: RECEIVE_SIMILAR_ARTISTS,
         artist,
-        items: _.get(json, ['similarartists', 'artist'], []),
+        items: _.get(similarartists, ['artist'], []),
         receivedAt: Date.now(),
-        ...json,
     }
 }
+
