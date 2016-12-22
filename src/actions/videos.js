@@ -2,27 +2,27 @@ export const REQUEST_VIDEO = 'REQUEST_VIDEO';
 export const RECEIVE_VIDEO = 'RECEIVE_VIDEO';
 export const INVALIDATE_VIDEO = 'INVALIDATE_VIDEO';
 
-export function invalidateVideo(query) {
+export function invalidateVideo(data) {
     return {
         type: INVALIDATE_VIDEO,
-        query,
+        ...data,
     }
 }
 
-export function requestVideo(query) {
+export function requestVideo(data) {
     return {
         type: REQUEST_VIDEO,
-        query,
+        ...data,
     }
 }
 
-export function receiveVideo(query, json) {
-    const {items = [], ...data} = json;
+export function receiveVideo(data, json) {
+    const {items = [], ...rest} = json;
 
     return {
-        ...data,
+        ...rest,
         type: RECEIVE_VIDEO,
-        query,
+        ...data,
         videos: items.map((video) => {
             return video.id.videoId;
         }),

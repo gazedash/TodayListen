@@ -22,8 +22,9 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-    background: rgba(0,0,0,0.7);
+    background: rgba(0, 0, 0, 0.7);
 }
+
 ::-webkit-scrollbar-thumb:window-inactive {
-    background: rgba(0,0,0,0.5);
+    background: rgba(0, 0, 0, 0.5);
 }

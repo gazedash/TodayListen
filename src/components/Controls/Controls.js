@@ -14,38 +14,38 @@ const Controls = React.createClass({
         };
 
         const large = {
-                width: 57,
-                height: 57,
-                padding: 0,
+            width: 57,
+            height: 57,
+            padding: 0,
         };
 
         return (
             <Paper zDepth={1}>
-            <BottomNavigation
-                style={style}
-                className="controls"
-            >
-                <ToolbarGroup>
-                    <IconButton
-                        style={large}
-                        iconStyle={largeIcon}
-                        iconClassName="fa fa-chevron-circle-left"
-                        onClick={this.props.prev.bind(this, false)}
-                    />
-                    <IconButton
-                        style={large}
-                        iconStyle={largeIcon}
-                        iconClassName={isPlaying ? "fa fa-pause" : "fa fa-play-circle"}
-                        onClick={() => this.props.play()}
-                    />
-                    <IconButton
-                        style={large}
-                        iconStyle={largeIcon}
-                        iconClassName="fa fa-chevron-circle-right"
-                        onClick={this.props.next.bind(this, false)}
-                    />
-                </ToolbarGroup>
-            </BottomNavigation>
+                <BottomNavigation
+                    style={style}
+                    className="controls"
+                >
+                    <ToolbarGroup>
+                        <IconButton
+                            style={large}
+                            iconStyle={largeIcon}
+                            iconClassName="fa fa-chevron-circle-left"
+                            onClick={this.props.prev.bind(this, false)}
+                        />
+                        <IconButton
+                            style={large}
+                            iconStyle={largeIcon}
+                            iconClassName={isPlaying ? "fa fa-pause" : "fa fa-play-circle"}
+                            onClick={() => this.props.play()}
+                        />
+                        <IconButton
+                            style={large}
+                            iconStyle={largeIcon}
+                            iconClassName="fa fa-chevron-circle-right"
+                            onClick={this.props.next.bind(this, false)}
+                        />
+                    </ToolbarGroup>
+                </BottomNavigation>
             </Paper>
         );
     }
@@ -60,7 +60,7 @@ Controls.propTypes = {
 };
 
 Controls.defaultProps = {
-  style: null,
+    style: null,
 };
 
 export default Controls;

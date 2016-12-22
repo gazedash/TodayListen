@@ -20,7 +20,8 @@ function videos(state = {
         case RECEIVE_VIDEO:
             return {
                 ...state,
-                query: action.query,
+                artist: action.artist,
+                song: action.song,
                 isFetching: false,
                 didInvalidate: false,
                 items: action.videos,
@@ -39,7 +40,7 @@ export function suggestedVideos(state = {}, action) {
             return {
                 //     TODO: deal with spaces...
                 ...state,
-                [action.query]: videos(state[action.query], action),
+                [action.song]: videos(state[action.song], action),
             };
         // return newVersion;
         default:

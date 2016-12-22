@@ -10,12 +10,12 @@ export default function configureStore(preloadedState) {
 
     return {
         ...createStore(
-        rootReducer,
-        preloadedState,
-        applyMiddleware(
-            sagaMiddleware,
-            loggerMiddleware,
-        )),
+            rootReducer,
+            preloadedState,
+            applyMiddleware(
+                sagaMiddleware,
+                loggerMiddleware,
+            )),
         runSaga: sagaMiddleware.run,
     }
 }

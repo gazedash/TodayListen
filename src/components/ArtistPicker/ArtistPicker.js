@@ -62,9 +62,9 @@ export default class ArtistPicker extends React.Component {
                         flexDirection: 'column',
                         flex: 1,
                     }}
-                    className="fa fa-4x fa-question"
+                       className="fa fa-4x fa-question"
                     />
-                    </div>}>
+                </div>}>
                 Image load failed!
             </ImageLoader>
         )
@@ -97,26 +97,26 @@ export default class ArtistPicker extends React.Component {
                     minWidth: '25%',
                 }}
             >
-            <ListItem
-                style={itemStyle}
-                leftIcon={null}
-                onClick={() => this.onArtistClick(index)}
-            >
-                <div
-                    style={{
-                        maxWidth: 174,
-                        display: 'flex',
-                        flexDirection: 'column',
-                        minHeight: 230,
-                    }}
+                <ListItem
+                    style={itemStyle}
+                    leftIcon={null}
+                    onClick={() => this.onArtistClick(index)}
                 >
-                    {this.renderImage(artist)}
-                    <div style={{
-                        textAlign: 'center',
-                        marginTop: 8,
-                    }}>{artist.name}</div>
-                </div>
-            </ListItem>
+                    <div
+                        style={{
+                            maxWidth: 174,
+                            display: 'flex',
+                            flexDirection: 'column',
+                            minHeight: 230,
+                        }}
+                    >
+                        {this.renderImage(artist)}
+                        <div style={{
+                            textAlign: 'center',
+                            marginTop: 8,
+                        }}>{artist.name}</div>
+                    </div>
+                </ListItem>
             </div>
         )
     }
@@ -150,7 +150,6 @@ export default class ArtistPicker extends React.Component {
             height: 57,
             padding: 0,
         };
-
 
         // List
         // justifyContent: 'center',

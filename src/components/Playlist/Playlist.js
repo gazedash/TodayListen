@@ -43,11 +43,11 @@ export default class Playlist extends Component {
                             style={{
                                 fontSize: 14,
                             }}
-                            onClick={this.props.onClick.bind(this, i)}
+                            onClick={this.props.onClick.bind(this, i, song.artist)}
                             leftIcon={this.renderIcon(i)}
                             key={i}
                         >
-                            {song.query}
+                            {song.song}
                         </ListItem>
                     )
                 })}

@@ -36,3 +36,7 @@ Search.PropTypes = {
     value: PropTypes.string.isRequired,
     onChange: PropTypes.func.isRequired,
 };
+
+Search.defaultProps = {
+    children: null,
+};

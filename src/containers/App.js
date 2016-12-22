@@ -1,6 +1,6 @@
 import React, {Component, PropTypes} from "react";
 import {connect} from "react-redux";
-import {selectArtist, invalidateArtist} from "../actions/artist";
+import {selectArtist, invalidateArtist, nextArtist} from "../actions/artist";
 import {invalidateSongs} from "../actions/songs";
 import Playlist from "../components/Playlist/Playlist";
 import Controls from "../components/Controls/Controls";
@@ -12,7 +12,6 @@ import Spinner from "halogen/ScaleLoader";
 class App extends Component {
     constructor(props) {
         super(props);
-        this.handleChange = this.handleChange.bind(this);
         this.handleRefreshClick = this.handleRefreshClick.bind(this);
         this.onSearch = this.onSearch.bind(this);
         this.state = {
@@ -23,10 +22,6 @@ class App extends Component {
 
     shouldComponentUpdate(nextProps) {
         return !!nextProps.videos.length;
-    }
-
-    handleChange(nextArtist) {
-        this.props.dispatch(selectArtist(nextArtist));
     }
 
     handleRefreshClick(e) {
@@ -112,6 +107,11 @@ class App extends Component {
             this.setState((prevState) => ({
                 playingId: diff,
             }));
+        } else {
+            // On playlist end
+            if (forward) {
+                this.props.dispatch(nextArtist(videos[playingId].artist));
+            }
         }
     }
 
@@ -163,7 +163,7 @@ class App extends Component {
                     </div>
                 </div>
             ) : videos.length === 0 ? <h3 style={{
-                margin: '50px 10px 10px',
+                    margin: '50px 10px 10px',
                 }}>The list is empty.</h3> : null);
 
         return (

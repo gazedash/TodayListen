@@ -1,8 +1,9 @@
 import fetch from "isomorphic-fetch";
+import _ from "lodash";
 import {lastFm} from "../api/lastfm_api";
 import {take, put, call, fork, select} from "redux-saga/effects";
 import * as actions from "../actions/artist";
-import {selectedArtistSelector, suggestedArtistsSelector} from "../selectors/index";
+import {selectedArtistSelector, suggestedArtistsSelector, popularSongsSelector} from "../selectors/index";
 import {fetchVideo} from "./videos";
 import {fetchSongs} from "./songs";
 
@@ -20,7 +21,7 @@ function* fetchArtists(artist) {
 export function* invalidateArtist() {
     while (true) {
         const {artist} = yield take(actions.INVALIDATE_ARTIST);
-        yield call(fetchArtists, artist);
+        yield call(mainSaga, artist);
     }
 }
 
@@ -37,11 +38,24 @@ export function* nextArtistChange() {
     }
 }
 
-function* mainSaga(artist) {
-    yield fork(fetchArtists, artist);
-    let songs = yield call(fetchSongs, artist);
-    if (songs) {
-        yield songs.map(song => fork(fetchVideo, song));
+export function* nextArtistAuto() {
+    while (true) {
+        const {artist} = yield take(actions.NEXT_ARTIST);
+        const selectedArtist = yield select(selectedArtistSelector);
+        const suggestedArtists = yield select(suggestedArtistsSelector);
+        const items = _.get(suggestedArtists, [artist, 'items']);
+        const count = items ? items.length : 0;
+        let nextArtist = null;
+        if (count) {
+            items.some((item) => {
+                const res = item.name && item.name !== artist && item.name !== selectedArtist && !suggestedArtists[item.name];
+                if (res) nextArtist = item.name ? item.name : '';
+                return res;
+            });
+            if (nextArtist && nextArtist != '') {
+                yield fork(mainSaga, nextArtist);
+            }
+        }
     }
 }
 
@@ -52,8 +66,19 @@ export function* startup() {
     }
 }
 
+function* mainSaga(artist) {
+    if (artist && artist != '') {
+        yield fork(fetchArtists, artist);
+        let songs = yield call(fetchSongs, artist);
+        if (songs) {
+            yield songs.map(song => fork(fetchVideo, song));
+        }
+    }
+}
+
 export default function* root() {
     yield fork(startup);
     yield fork(nextArtistChange);
+    yield fork(nextArtistAuto);
     yield fork(invalidateArtist);
 }

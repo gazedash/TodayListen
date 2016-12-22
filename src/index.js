@@ -14,7 +14,7 @@ injectTapEventPlugin();
 ReactDOM.render(
     <DocumentTitle title='TodayIlisten'>
         <MuiThemeProvider>
-            <Routes history={hashHistory} />
+            <Routes history={hashHistory}/>
         </MuiThemeProvider>
     </DocumentTitle>,
     document.getElementById('root')
