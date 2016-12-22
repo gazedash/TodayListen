@@ -9,6 +9,7 @@ import Header from "../components/Header/Header";
 import {selectArtist, invalidateArtist, nextArtist} from "../actions/artist";
 import {invalidateSongs} from "../actions/songs";
 import {youTube} from "../api/youtube_api";
+import "./App.css";
 
 class App extends Component {
     constructor(props) {
@@ -114,20 +115,12 @@ class App extends Component {
         }
     }
 
-    onPlayerPlayClick() {
+    onPlayerPlayClick(play = true) {
         const {isPlaying} = this.state;
-        if (!isPlaying) {
+        const cond = play ? !isPlaying : isPlaying;
+        if (cond) {
             this.setState({
-                isPlaying: !isPlaying,
-            })
-        }
-    }
-
-    onPlayerPauseClick() {
-        const {isPlaying} = this.state;
-        if (isPlaying) {
-            this.setState({
-                isPlaying: !isPlaying,
+                isPlaying: cond,
             })
         }
     }
@@ -146,20 +139,12 @@ class App extends Component {
     renderPlaylist() {
         const {songsFetching, videos} = this.props;
         const spinner = (songsFetching ? (
-                <div style={{
-                    display: 'flex',
-                    justifyContent: 'center',
-                }}>
-                    <div style={{
-                        position: 'absolute',
-                        top: '40%',
-                    }}>
+                <div className="spinner-container">
+                    <div className="spinner-inner">
                         <Spinner color="#000" size="50px" margin="4px"/>
                     </div>
                 </div>
-            ) : videos.length === 0 ? <h3 style={{
-                    margin: '50px 10px 10px',
-                }}>The list is empty.</h3> : null);
+            ) : videos.length === 0 ? <h3 className="playlist-empty">The list is empty.</h3> : null);
 
         return (
             <div>
@@ -190,18 +175,11 @@ class App extends Component {
         }
 
         return (
-            <div
-                style={{
-                    bottom: '70px',
-                    position: 'fixed',
-                    right: '20px',
-                    top: 'auto',
-                }}
-            >
+            <div className="player-container">
                 <YouTube
                     onEnd={() => this.next()}
                     onPlay={() => this.onPlayerPlayClick()}
-                    onPause={() => this.onPlayerPauseClick()}
+                    onPause={() => this.onPlayerPlayClick(false)}
                     ref="youtube"
                     opts={opts}
                     videoId={_.get(videos[this.state.playingId], "items[0]")}
@@ -212,25 +190,15 @@ class App extends Component {
 
     renderFooter() {
         return (
-            <footer style={{
-                marginTop: 26,
-            }}>
+            <footer className="footer">
                 {this.renderControls()}
             </footer>
         )
     }
 
     renderPage() {
-        const style = {
-            padding: 0,
-            margin: 0,
-            marginTop: 44,
-        };
-
         return (
-            <section
-                style={style}
-            >
+            <section className="page-content">
                 {this.renderPlaylist()}
                 {this.renderPlayer()}
                 {<h6><a href='#' onClick={this.handleRefreshClick}> Refresh</a></h6>}

@@ -1,0 +1,29 @@
+.player-container {
+    bottom: 70px;
+    position: fixed;
+    right: 20px;
+    top: auto;
+}
+
+.footer {
+    margin-top: 26px,
+}
+
+.page-content {
+    padding: 0;
+    margin: 44px 0 0;
+}
+
+.playlist-empty {
+    margin: 50px 10px 10px;
+}
+
+.spinner-container {
+    display: flex;
+    justify-content: center;
+}
+
+.spinner-inner {
+    position: absolute;
+    top: 40%;
+}
