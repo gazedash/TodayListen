@@ -3,6 +3,7 @@ import AppBar from "material-ui/AppBar";
 import Search from "../../components/Search/Search";
 import IconButton from "material-ui/IconButton";
 import ArtistPicker from "../ArtistPicker/ArtistPicker";
+import "./Header.css";
 
 export default class Header extends Component {
     constructor(props) {
@@ -49,28 +50,11 @@ export default class Header extends Component {
     }
 
     render() {
-        const largeIcon = {
-            color: 'white',
-            fontSize: 20,
-        };
-
-        const large = {
-            width: 54,
-            height: 57,
-            padding: 0,
-        };
-
-        const styleSearch = {
-            display: 'flex',
-            alignItems: 'center',
-        };
-
         const searchButton = (
-            <div style={styleSearch}>
+            <div className="search-button-container">
                 <IconButton
-                    style={large}
-                    iconStyle={largeIcon}
-                    iconClassName="fa fa-search"
+                    className="search-button"
+                    iconClassName="fa fa-search search-icon"
                     onClick={() => this.props.onSearch(this.state.value)}
                 />
             </div>
@@ -83,12 +67,7 @@ export default class Header extends Component {
                 titleStyle={{
                     flex: 'initial',
                 }}
-                style={{
-                    height: 42,
-                    top: 0,
-                    position: 'fixed',
-                    color: 'white !important',
-                }}
+                className="app-bar"
             >
                 <Search
                     children={searchButton}

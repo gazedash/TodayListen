@@ -3,3 +3,20 @@
     padding: 0 !important;
 }
 
+.play-button {
+    padding: 0 !important;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.song-number {
+    color: #aaa;
+    display: flex !important;
+    justify-content: center;
+    align-items: center;
+}
+
+.song-item {
+    font-size: 15px !important;
+}

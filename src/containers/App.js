@@ -1,13 +1,14 @@
 import React, {Component, PropTypes} from "react";
 import {connect} from "react-redux";
-import {selectArtist, invalidateArtist, nextArtist} from "../actions/artist";
-import {invalidateSongs} from "../actions/songs";
-import Playlist from "../components/Playlist/Playlist";
-import Controls from "../components/Controls/Controls";
 import _ from "lodash";
 import YouTube from "react-youtube";
-import Header from "../components/Header/Header";
 import Spinner from "halogen/ScaleLoader";
+import Playlist from "../components/Playlist/Playlist";
+import Controls from "../components/Controls/Controls";
+import Header from "../components/Header/Header";
+import {selectArtist, invalidateArtist, nextArtist} from "../actions/artist";
+import {invalidateSongs} from "../actions/songs";
+import {youTube} from "../api/youtube_api";
 
 class App extends Component {
     constructor(props) {
@@ -31,10 +32,7 @@ class App extends Component {
 
         if (selectedArtist) {
             dispatch(invalidateArtist(selectedArtist));
-            // dispatch(fetchArtistsIfNeeded(selectedArtist));
-
             dispatch(invalidateSongs(selectedArtist));
-            // dispatch(fetchSongsIfNeeded(selectedArtist));
         }
     }
 
@@ -65,7 +63,8 @@ class App extends Component {
             if (offset !== playingId) {
                 const {videos} = this.props;
                 const videoId = videos[offset].items[0];
-                player.loadVideoByUrl(`https://www.youtube.com/v/${videoId}?version=3`).then(() => {
+                console.log(videos[offset]);
+                player.loadVideoByUrl(youTube.getVideoUrl(videoId)).then(() => {
                     if (isPlaying || play) {
                         if (play) {
                             this.setState({
@@ -136,10 +135,6 @@ class App extends Component {
     renderControls() {
         return (
             <Controls
-                style={{
-                    position: 'fixed',
-                    bottom: 0,
-                }}
                 isPlaying={this.state.isPlaying}
                 next={() => this.next()}
                 prev={() => this.next(false)}

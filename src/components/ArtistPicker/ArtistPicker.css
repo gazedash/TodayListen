@@ -1,25 +1,76 @@
-/*.artist-picker {*/
-/*display: flex;*/
-/*justify-content: center;*/
-/*width: 100%;*/
-/*}*/
+.suggest-icon {
+    color: white !important;
+    font-size: 20px;
+}
 
-/*.artist-picker .content {*/
+.suggest-button {
+    width: 57px;
+    height: 57px;
+    padding: 0;
+}
 
-/*}*/
+.artist-image {
+    display: flex;
+    align-self: center;
+    height: 174px;
+    width: 174px;
+}
 
-/*.artist-picker > div {*/
-/*width: 66%;*/
-/*}*/
+.artist-image-container {
+    max-width: 174px;
+    display: flex;
+    flex-direction: column;
+    min-height: 230px;
+}
 
-/*@media (max-width: 700px) {*/
-/*.artist-picker > div {*/
-/*width: 33.33%;*/
-/*}*/
-/*}*/
+.unknown-artist {
+    align-self: center;
+    align-items: center;
+    display: flex !important;
+    flex-direction: column;
+    flex: 1;
+}
 
-/*@media (max-width: 400px) {*/
-/*.artist-picker .content {*/
-/*width: 300px !important;*/
-/*}*/
-/*}*/
+.image-loader {
+    align-self: center;
+}
+
+.artist-list {
+    padding-top: 0;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.dialog-content {
+    width: fit-content !important;
+}
+
+.dialog-body {
+    padding-bottom: 0;
+    overflow-Y: scroll !important;
+}
+
+.artist-picker-container {
+    display: flex;
+    align-items: center;
+}
+
+.artist-name {
+    text-align: center;
+    margin-top: 8px;
+}
+
+.artist-list-item-container {
+    flex-grow: 1;
+    min-width: 25%;
+}
+
+.artist-list-item, .artist-list-item-selected {
+    justify-content: center;
+    display: flex;
+    font-size: 14px;
+}
+
+.artist-list-item-selected {
+    background-color: #55d680 !important;
+}

@@ -3,8 +3,8 @@ import Dialog from "material-ui/Dialog";
 import FlatButton from "material-ui/FlatButton";
 import IconButton from "material-ui/IconButton";
 import {List, ListItem} from "material-ui/List";
-import "./ArtistPicker.css";
 import ImageLoader from "react-imageloader";
+import "./ArtistPicker.css";
 
 export default class ArtistPicker extends React.Component {
     constructor(props) {
@@ -24,47 +24,22 @@ export default class ArtistPicker extends React.Component {
     }
 
     renderImage(artist) {
-        let imageStyle = {
-            display: 'flex',
-            alignSelf: 'center',
-            height: 174,
-            width: 174,
-        };
+        const unknown = (<div className="artist-image" >
+                <i className="fa fa-4x fa-question unknown-artist"
+                />
+            </div>
+        );
 
         if (artist.image[2]["#text"] === '') {
-            return (
-                <div style={imageStyle}>
-                    <i style={{
-                        alignSelf: 'center',
-                        alignItems: 'center',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        flex: 1,
-                    }}
-                       className="fa fa-4x fa-question"
-                    />
-                </div>
-            )
+            return (unknown)
         }
 
         return (
             <ImageLoader
-                style={{
-                    alignSelf: 'center',
-                }}
+                className="image-loader"
                 src={artist.image[2]["#text"]}
                 wrapper={React.DOM.div}
-                preloader={() => <div style={imageStyle}>
-                    <i style={{
-                        alignSelf: 'center',
-                        alignItems: 'center',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        flex: 1,
-                    }}
-                       className="fa fa-4x fa-question"
-                    />
-                </div>}>
+                preloader={() => unknown}>
                 Image load failed!
             </ImageLoader>
         )
@@ -73,48 +48,19 @@ export default class ArtistPicker extends React.Component {
     renderItem(artist, index) {
         const {selectedId, isSelected} = this.state;
 
-        let itemStyle = {
-            justifyContent: 'center',
-            display: 'flex',
-            fontSize: 14,
-        };
-
-        if (selectedId === index && isSelected) {
-            itemStyle = {
-                justifyContent: 'center',
-                display: 'flex',
-                backgroundColor: '#55d680',
-                fontSize: 14,
-            }
-        }
-
-
         return (
             <div
                 key={index}
-                style={{
-                    flexGrow: 1,
-                    minWidth: '25%',
-                }}
+                className="artist-list-item-container"
             >
                 <ListItem
-                    style={itemStyle}
+                    className={"artist-list-item" + (selectedId === index && isSelected ? " artist-list-item-selected" : null)}
                     leftIcon={null}
                     onClick={() => this.onArtistClick(index)}
                 >
-                    <div
-                        style={{
-                            maxWidth: 174,
-                            display: 'flex',
-                            flexDirection: 'column',
-                            minHeight: 230,
-                        }}
-                    >
+                    <div className="artist-image-container">
                         {this.renderImage(artist)}
-                        <div style={{
-                            textAlign: 'center',
-                            marginTop: 8,
-                        }}>{artist.name}</div>
+                        <div className="artist-name">{artist.name}</div>
                     </div>
                 </ListItem>
             </div>
@@ -140,40 +86,19 @@ export default class ArtistPicker extends React.Component {
             />,
         ];
 
-        const largeIcon = {
-            color: 'white',
-            fontSize: 20,
-        };
-
-        const large = {
-            width: 57,
-            height: 57,
-            padding: 0,
-        };
-
         // List
         // justifyContent: 'center',
 
         return (
-            <div style={{
-                display: 'flex',
-                alignItems: 'center',
-            }}>
+            <div className="artist-picker-container">
                 <IconButton
-                    style={large}
-                    iconStyle={largeIcon}
-                    iconClassName="fa fa-lightbulb-o"
+                    className="suggest-button"
+                    iconClassName="fa fa-lightbulb-o suggest-icon"
                     onClick={this.props.onOpen}
                 />
                 <Dialog
-                    bodyStyle={{
-                        paddingBottom: 0,
-                        overflowY: 'scroll',
-                    }}
-                    contentClassName="artist-picker content"
-                    contentStyle={{
-                        width: 'fit-content',
-                    }}
+                    bodyClassName="dialog-body"
+                    contentClassName="dialog-content"
                     className="artist-picker"
                     title="Pick artist"
                     actions={actions}
@@ -181,13 +106,7 @@ export default class ArtistPicker extends React.Component {
                     open={this.props.isOpen}
                     onRequestClose={this.props.onClose}
                 >
-                    <List
-                        style={{
-                            paddingTop: 0,
-                            display: 'flex',
-                            flexWrap: 'wrap',
-                        }}
-                    >
+                    <List className="artist-list">
                         {items.map((artist, i) => {
                             return (this.renderItem(artist, i))
                         })}

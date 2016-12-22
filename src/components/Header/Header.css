@@ -1,0 +1,22 @@
+.search-button-container {
+    display: flex;
+    align-items: center;
+}
+
+.search-icon {
+    color: white !important;
+    font-size: 20px;
+}
+
+.search-button {
+    width: 54px;
+    height: 57px;
+    padding: 0;
+}
+
+.app-bar {
+    height: 42px;
+    top: 0;
+    position: fixed !important;
+    color: white !important;
+}

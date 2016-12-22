@@ -1,6 +1,6 @@
 import {INVALIDATE_VIDEO, RECEIVE_VIDEO, REQUEST_VIDEO} from "../actions/videos";
 
-function videos(state = {
+function video(state = {
     isFetching: false,
     didInvalidate: false,
     items: [],
@@ -38,11 +38,9 @@ export function suggestedVideos(state = {}, action) {
         case RECEIVE_VIDEO:
         case REQUEST_VIDEO:
             return {
-                //     TODO: deal with spaces...
                 ...state,
-                [action.song]: videos(state[action.song], action),
+                [action.song]: video(state[action.song], action),
             };
-        // return newVersion;
         default:
             return state;
     }

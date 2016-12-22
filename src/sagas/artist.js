@@ -3,7 +3,7 @@ import _ from "lodash";
 import {lastFm} from "../api/lastfm_api";
 import {take, put, call, fork, select} from "redux-saga/effects";
 import * as actions from "../actions/artist";
-import {selectedArtistSelector, suggestedArtistsSelector, popularSongsSelector} from "../selectors/index";
+import {selectedArtistSelector, suggestedArtistsSelector} from "../selectors/index";
 import {fetchVideo} from "./videos";
 import {fetchSongs} from "./songs";
 
@@ -41,15 +41,13 @@ export function* nextArtistChange() {
 export function* nextArtistAuto() {
     while (true) {
         const {artist} = yield take(actions.NEXT_ARTIST);
-        const selectedArtist = yield select(selectedArtistSelector);
         const suggestedArtists = yield select(suggestedArtistsSelector);
         const items = _.get(suggestedArtists, [artist, 'items']);
-        const count = items ? items.length : 0;
-        let nextArtist = null;
-        if (count) {
+        if (items) {
+            let nextArtist = null;
             items.some((item) => {
-                const res = item.name && item.name !== artist && item.name !== selectedArtist && !suggestedArtists[item.name];
-                if (res) nextArtist = item.name ? item.name : '';
+                const res = item.name && !suggestedArtists[item.name];
+                if (res) nextArtist = item.name;
                 return res;
             });
             if (nextArtist && nextArtist != '') {

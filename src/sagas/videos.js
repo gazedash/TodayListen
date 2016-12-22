@@ -6,8 +6,9 @@ import * as actions from "../actions/videos";
 function fetchVideoApi(query) {
     const getQuery = youTube.search(query);
     return fetch(getQuery)
-        .then(response => {
-            return response.json();
+        .then(response => response.json())
+        .then(json => {
+            return json;
         });
 }
 

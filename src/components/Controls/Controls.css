@@ -1,7 +1,20 @@
 .controls {
     background-color: #ff3399 !important;
+    position: fixed !important;
+    bottom: 0;
 }
 
 .controls > div {
     justify-content: center !important;
+}
+
+.control-button {
+    width: 57px;
+    height: 57px;
+    padding: 0 !important;
+}
+
+.control-icon {
+    color: white !important;
+    font-size: 40px !important;
 }

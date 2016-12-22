@@ -10,22 +10,12 @@ export default class Playlist extends Component {
         if (playingId === id) {
             return (<IconButton
                 iconClassName={isPlaying ? "fa fa-pause" : "fa fa-play-circle"}
-                style={{
-                    padding: "0px",
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                }}
+                className="play-button"
             />);
         }
 
         return (
-            <span style={{
-                color: "#aaa",
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-            }}>
+            <span className="song-number">
                 {id + 1}
             </span>
         );
@@ -40,9 +30,7 @@ export default class Playlist extends Component {
                 {this.props.items.map((song, i) => {
                     return (
                         <ListItem
-                            style={{
-                                fontSize: 14,
-                            }}
+                            className="song-item"
                             onClick={this.props.onClick.bind(this, i, song.artist)}
                             leftIcon={this.renderIcon(i)}
                             key={i}

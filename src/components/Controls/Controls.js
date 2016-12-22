@@ -8,40 +8,27 @@ import "./Controls.css";
 const Controls = React.createClass({
     render() {
         const {isPlaying, style} = this.props;
-        const largeIcon = {
-            color: 'white',
-            fontSize: 40,
-        };
-
-        const large = {
-            width: 57,
-            height: 57,
-            padding: 0,
-        };
 
         return (
             <Paper zDepth={1}>
                 <BottomNavigation
                     style={style}
-                    className="controls"
+                    className={`controls ${this.props.className}`}
                 >
                     <ToolbarGroup>
                         <IconButton
-                            style={large}
-                            iconStyle={largeIcon}
-                            iconClassName="fa fa-chevron-circle-left"
+                            className="control-button"
+                            iconClassName="fa fa-chevron-circle-left control-icon"
                             onClick={this.props.prev.bind(this, false)}
                         />
                         <IconButton
-                            style={large}
-                            iconStyle={largeIcon}
-                            iconClassName={isPlaying ? "fa fa-pause" : "fa fa-play-circle"}
+                            className="control-button"
+                            iconClassName={"control-icon " + (isPlaying ? "fa fa-pause" : "fa fa-play-circle")}
                             onClick={() => this.props.play()}
                         />
                         <IconButton
-                            style={large}
-                            iconStyle={largeIcon}
-                            iconClassName="fa fa-chevron-circle-right"
+                            className="control-button"
+                            iconClassName="fa fa-chevron-circle-right control-icon"
                             onClick={this.props.next.bind(this, false)}
                         />
                     </ToolbarGroup>
@@ -52,6 +39,7 @@ const Controls = React.createClass({
 });
 
 Controls.propTypes = {
+    className: PropTypes.string,
     next: PropTypes.func.isRequired,
     prev: PropTypes.func.isRequired,
     play: PropTypes.func.isRequired,
@@ -60,6 +48,7 @@ Controls.propTypes = {
 };
 
 Controls.defaultProps = {
+    className: "",
     style: null,
 };
 
