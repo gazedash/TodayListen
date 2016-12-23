@@ -129,6 +129,7 @@ class App extends Component {
     }
 
     next(forward = true) {
+        console.log(this.props.selectedArtist, this.props.nextArtist);
         const {playingId} = this.state;
         const {videos} = this.props;
         let shouldPlay = playingId > 0;
@@ -295,10 +296,6 @@ App.propTypes = {
     suggestedArtists: PropTypes.array.isRequired,
     videos: PropTypes.array.isRequired,
     dispatch: PropTypes.func.isRequired,
-    fetchFinishArtist: PropTypes.oneOfType([
-        React.PropTypes.string,
-        React.PropTypes.object,
-    ]),
 };
 
 App.defaultProps = {
@@ -307,7 +304,7 @@ App.defaultProps = {
 };
 
 function mapStateToProps(state) {
-    const {selectedArtist, suggestedArtists, suggestedVideos: videos, fetchFinishArtist} = state;
+    const {selectedArtist, suggestedArtists, suggestedVideos: videos, fetchArtist} = state;
     const {
         lastUpdated: artistsLastUpdated,
         items: suggestedArtistsList,
@@ -316,7 +313,7 @@ function mapStateToProps(state) {
         items: []
     };
 
-    const {isFetching, artist: nextArtist} = fetchFinishArtist;
+    const {isFetching, artist: nextArtist} = fetchArtist;
 
     return {
         videos: _.map(videos, ((item) => {

@@ -18,7 +18,7 @@ export function selectedArtist(state = 'Mono', action) {
     }
 }
 
-export function fetchFinishArtist(state = {}, action) {
+export function fetchArtist(state = {}, action) {
     switch (action.type) {
         case FETCH_PROGRESS_ARTIST:
             return {

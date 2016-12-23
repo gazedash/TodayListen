@@ -22,7 +22,7 @@ function songs(state = {
                 ...state,
                 isFetching: false,
                 didInvalidate: false,
-                items: action.songs,
+                // items: action.songs,
                 lastUpdated: action.receivedAt,
             };
         default:
@@ -33,14 +33,14 @@ function songs(state = {
 export function popularSongs(state = {}, action) {
     switch (action.type) {
         case INVALIDATE_SONGS:
-        // case RECEIVE_POPULAR_SONGS:
-        //     if (action.songs.length !== 0) {
-        //         return {
-        //             ...state,
-        //             [action.artist]: songs(state[action.artist], action),
-        //         };
-        //     }
-        //     return state;
+        case RECEIVE_POPULAR_SONGS:
+            if (action.songs.length !== 0) {
+                return {
+                    ...state,
+                    [action.artist]: songs(state[action.artist], action),
+                };
+            }
+            return state;
         default:
             return state;
     }
