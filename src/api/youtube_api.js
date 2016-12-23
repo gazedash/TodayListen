@@ -15,14 +15,14 @@ export class YouTube {
     };
 
     search(query) {
-        query = encodeURIComponent(query);
+        const encodedQuery = encodeURIComponent(query);
         // console.log(`${this.buildQuery(SEARCH)}&q=${query}&part=id`);
-        return `${this.buildQuery(SEARCH)}&q=${query}&part=id&videoEmbeddable=true&type=video`
+        return `${this.buildQuery(SEARCH)}&q=${encodedQuery}&part=id&videoEmbeddable=true&type=video`
     }
 
     getVideoUrl(videoId) {
-        videoId = encodeURIComponent(videoId);
-        return `${YOUTUBE_VIDEO_ENDPOINT}/v/${videoId}?version=${API_VERSION}`;
+        const encodedVideoId = encodeURIComponent(videoId);
+        return `${YOUTUBE_VIDEO_ENDPOINT}/v/${encodedVideoId}?version=${API_VERSION}`;
     }
 }
 

@@ -50,7 +50,7 @@ export function* nextArtistAuto() {
                 if (res) nextArtist = item.name;
                 return res;
             });
-            if (nextArtist && nextArtist != '') {
+            if (nextArtist && nextArtist !== '') {
                 yield fork(mainSaga, nextArtist);
             }
         }
@@ -65,7 +65,7 @@ export function* startup() {
 }
 
 function* mainSaga(artist) {
-    if (artist && artist != '') {
+    if (artist && artist !== '') {
         yield fork(fetchArtists, artist);
         let songs = yield call(fetchSongs, artist);
         if (songs) {
