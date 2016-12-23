@@ -27,9 +27,9 @@ class App extends Component {
 
     componentWillReceiveProps(nextProps) {
         // On playlist end: play if isPlaying and new songs fetched
-        const {fetchFinishArtist, videos} = this.props;
-        const {isPlaying, playIfLoaded} = this.state;
-        if (isPlaying && nextProps.fetchFinishArtist !== fetchFinishArtist && videos !== nextProps.videos && playIfLoaded) {
+        const {nextArtist, videos} = this.props;
+        const {playIfLoaded} = this.state;
+        if (nextProps.nextArtist !== nextArtist && nextProps.videos !== videos && playIfLoaded) {
             this.next();
             this.setState({
                 playIfLoaded: false,
@@ -147,7 +147,7 @@ class App extends Component {
                 this.props.dispatch(nextArtist(videos[playingId].artist));
                 this.setState({
                     playIfLoaded: true,
-                })
+                });
             }
         }
     }
@@ -174,8 +174,8 @@ class App extends Component {
 
 
     renderPlaylist() {
-        const {songsFetching, videos} = this.props;
-        const spinner = (songsFetching ? (
+        const {isFetching, videos} = this.props;
+        const spinner = (isFetching ? (
                 <div className="spinner-container">
                     <div className="spinner-inner">
                         <Spinner color="#000" size="50px" margin="4px"/>
@@ -288,13 +288,12 @@ class App extends Component {
 }
 
 App.propTypes = {
+    nextArtist: PropTypes.string,
+    isFetching: PropTypes.bool.isRequired,
     selectedArtist: PropTypes.string,
     artists: PropTypes.object.isRequired,
     suggestedArtists: PropTypes.array.isRequired,
     videos: PropTypes.array.isRequired,
-    songs: PropTypes.array.isRequired,
-    artistsFetching: PropTypes.bool.isRequired,
-    songsFetching: PropTypes.bool.isRequired,
     dispatch: PropTypes.func.isRequired,
     fetchFinishArtist: PropTypes.oneOfType([
         React.PropTypes.string,
@@ -304,13 +303,12 @@ App.propTypes = {
 
 App.defaultProps = {
     selectedArtist: null,
-    fetchFinishArtist: null,
+    nextArtist: null,
 };
 
 function mapStateToProps(state) {
-    const {selectedArtist, suggestedArtists, popularSongs, suggestedVideos: videos, fetchFinishArtist} = state;
+    const {selectedArtist, suggestedArtists, suggestedVideos: videos, fetchFinishArtist} = state;
     const {
-        isFetching: artistsFetching,
         lastUpdated: artistsLastUpdated,
         items: suggestedArtistsList,
     } = suggestedArtists[selectedArtist] || {
@@ -318,27 +316,18 @@ function mapStateToProps(state) {
         items: []
     };
 
-    const {
-        isFetching: songsFetching,
-        lastUpdated: songsLastUpdated,
-        items: songs
-    } = popularSongs[selectedArtist] || {
-        isFetching: false,
-        items: []
-    };
+    const {isFetching, artist: nextArtist} = fetchFinishArtist;
+
     return {
         videos: _.map(videos, ((item) => {
             return item
         })),
-        fetchFinishArtist,
+        nextArtist,
+        isFetching,
         suggestedArtists: suggestedArtistsList,
         selectedArtist,
         artists: suggestedArtists,
         artistsLastUpdated,
-        artistsFetching,
-        songs,
-        songsFetching,
-        songsLastUpdated,
     }
 }
 

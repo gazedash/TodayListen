@@ -66,6 +66,7 @@ export function* startup() {
 
 function* mainSaga(artist) {
     if (artist && artist !== '') {
+        yield put(actions.fetchProgressArtist(artist));
         yield fork(fetchArtists, artist);
         const songs = yield call(fetchSongs, artist);
         if (songs) {

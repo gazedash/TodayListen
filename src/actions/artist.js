@@ -4,6 +4,7 @@ export const SELECT_ARTIST = 'SELECT_ARTIST';
 export const INVALIDATE_ARTIST = 'INVALIDATE_ARTIST';
 export const NEXT_ARTIST = 'NEXT_ARTIST';
 export const FETCH_FINISH_ARTIST = 'FETCH_FINISH_ARTIST';
+export const FETCH_PROGRESS_ARTIST = 'FETCH_PROGRESS_ARTIST';
 
 export function selectArtist(artist) {
     return {
@@ -15,6 +16,13 @@ export function selectArtist(artist) {
 export function fetchFinishArtist(artist) {
     return {
         type: FETCH_FINISH_ARTIST,
+        artist,
+    }
+}
+
+export function fetchProgressArtist(artist) {
+    return {
+        type: FETCH_PROGRESS_ARTIST,
         artist,
     }
 }

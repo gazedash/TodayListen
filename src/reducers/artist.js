@@ -4,7 +4,8 @@ import {
     RECEIVE_SIMILAR_ARTISTS,
     REQUEST_SIMILAR_ARTISTS,
     NEXT_ARTIST,
-    FETCH_FINISH_ARTIST
+    FETCH_FINISH_ARTIST,
+    FETCH_PROGRESS_ARTIST,
 } from "../actions/artist";
 
 export function selectedArtist(state = 'Mono', action) {
@@ -19,8 +20,15 @@ export function selectedArtist(state = 'Mono', action) {
 
 export function fetchFinishArtist(state = {}, action) {
     switch (action.type) {
+        case FETCH_PROGRESS_ARTIST:
+            return {
+                isFetching: true,
+            };
         case FETCH_FINISH_ARTIST:
-            return action.artist;
+            return {
+                isFetching: false,
+                artist: action.artist,
+            };
         default:
             return state;
     }
