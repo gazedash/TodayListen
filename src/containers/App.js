@@ -1,11 +1,10 @@
 import React, {Component, PropTypes} from "react";
 import {connect} from "react-redux";
 import _ from "lodash";
-import YouTube from "react-youtube";
-import IconButton from "material-ui/IconButton";
 import Spinner from "halogen/ScaleLoader";
 import Playlist from "../components/Playlist/Playlist";
 import Controls from "../components/Controls/Controls";
+import Player from "../components/Player/Player";
 import Header from "../components/Header/Header";
 import {selectArtist, invalidateArtist, nextArtist} from "../actions/artist";
 import {invalidateSongs} from "../actions/songs";
@@ -19,7 +18,6 @@ class App extends Component {
         this.state = {
             playIfLoaded: false,
             currentVideoInstance: 0,
-            isOpen: false,
             playingId: 0,
             isPlaying: false,
         }
@@ -58,7 +56,7 @@ class App extends Component {
     }
 
     play(index) {
-        const player = _.get(this.refs, ['youtube', 'internalPlayer']);
+        const player = _.get(this.refs, ['youtube', 'refs' ,'youtube', 'internalPlayer']);
         if (player) {
             if (this.state.isPlaying) {
                 player.pauseVideo();
@@ -74,7 +72,7 @@ class App extends Component {
 
     loadVideo(offset, play) {
         const {isPlaying, playingId} = this.state;
-        const player = _.get(this.refs, ['youtube', 'internalPlayer']);
+        const player = _.get(this.refs, ['youtube', 'refs' ,'youtube', 'internalPlayer']);
         if (player) {
             if (offset !== playingId) {
                 const {videos} = this.props;
@@ -108,28 +106,7 @@ class App extends Component {
         }
     }
 
-    tryNext(forward = true) {
-        const player = _.get(this.refs, ['youtube', 'internalPlayer']);
-        if (player) {
-            const {videos} = this.props;
-            const {currentVideoInstance, playingId, isPlaying} = this.state;
-            const items = videos[playingId].items;
-            const diff = currentVideoInstance + (forward ? 1 : -1);
-            if (items.length !== 0 && diff < items.length && diff >= 0) {
-                player.cueVideoById(items[diff]).then(() => {
-                    if (isPlaying) {
-                        player.playVideo();
-                    }
-                });
-                this.setState((prevState) => ({
-                    currentVideoInstance: diff,
-                }))
-            }
-        }
-    }
-
     next(forward = true) {
-        console.log(this.props.selectedArtist, this.props.nextArtist);
         const {playingId} = this.state;
         const {videos} = this.props;
         let shouldPlay = playingId > 0;
@@ -153,14 +130,16 @@ class App extends Component {
         }
     }
 
-    onPlayerPlayClick(play = true) {
-        const {isPlaying} = this.state;
-        const cond = play ? !isPlaying : isPlaying;
-        if (cond) {
-            this.setState({
-                isPlaying: cond,
-            })
-        }
+    onPlayerPlayClick(cond) {
+        this.setState({
+            isPlaying: cond,
+        });
+    }
+
+    onTryNext(diff) {
+        this.setState((prevState) => ({
+            currentVideoInstance: diff,
+        }))
     }
 
     renderControls() {
@@ -172,7 +151,6 @@ class App extends Component {
                 next={() => this.next()}
             />)
     }
-
 
     renderPlaylist() {
         const {isFetching, videos} = this.props;
@@ -197,57 +175,21 @@ class App extends Component {
         )
     }
 
-    renderTryPopup() {
-        if (this.state.isOpen) {
-            return (
-                <div className="player-try-container">
-                    <IconButton
-                        className="player-try-button"
-                        iconClassName="fa fa-chevron-circle-left"
-                        onClick={() => this.tryNext(false)}
-                    />
-                    <IconButton
-                        className="control-button"
-                        iconClassName="fa fa-chevron-circle-right"
-                        onClick={() => this.tryNext()}
-                    />
-                </div>
-            )
-        }
-        return null;
-    }
-
     renderPlayer() {
         const {videos} = this.props;
 
-        const opts = {
-            height: '240',
-            width: '360',
-            playerVars: { // https://developers.google.com/youtube/player_parameters
-                autoplay: 0
-            }
-        };
-
-        if (videos.length === 0) {
-            return null;
-        }
-
         return (
-            <div
-                className="player-container"
-                onMouseEnter={() => this.setState({isOpen: true,})}
-                onMouseLeave={() => this.setState({isOpen: false,})}
-            >
-                {this.renderTryPopup()}
-                <YouTube
-                    onEnd={() => this.next()}
-                    onPlay={() => this.onPlayerPlayClick()}
-                    onPause={() => this.onPlayerPlayClick(false)}
-                    ref="youtube"
-                    opts={opts}
-                    videoId={_.get(videos[this.state.playingId], "items[0]")}
-                />
-            </div>
+            <Player
+                ref="youtube"
+                fakeRef="youtube"
+                currentVideoInstance={this.state.currentVideoInstance}
+                isPlaying={this.state.isPlaying}
+                playingId={this.state.playingId}
+                videos={videos}
+                onPlayerPlayClick={(cond) => this.onPlayerPlayClick(cond)}
+                onTryNext={(val) => this.onTryNext(val)}
+                onNext={() => this.next()}
+            />
         )
     }
 
