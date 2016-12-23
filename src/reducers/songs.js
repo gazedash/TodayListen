@@ -34,11 +34,13 @@ export function popularSongs(state = {}, action) {
     switch (action.type) {
         case INVALIDATE_SONGS:
         case RECEIVE_POPULAR_SONGS:
-        case REQUEST_POPULAR_SONGS:
-            return {
-                ...state,
-                [action.artist]: songs(state[action.artist], action),
-            };
+            if (action.songs.length !== 0) {
+                return {
+                    ...state,
+                    [action.artist]: songs(state[action.artist], action),
+                };
+            }
+            return state;
         default:
             return state;
     }

@@ -60,11 +60,13 @@ export function suggestedArtists(state = {}, action) {
     switch (action.type) {
         case INVALIDATE_ARTIST:
         case RECEIVE_SIMILAR_ARTISTS:
-        case REQUEST_SIMILAR_ARTISTS:
-            return {
-                ...state,
-                [action.artist]: artists(state[action.artist], action),
-            };
+            if (action.items.length !== 0) {
+                return {
+                    ...state,
+                    [action.artist]: artists(state[action.artist], action),
+                };
+            }
+            return state;
         default:
             return state;
     }

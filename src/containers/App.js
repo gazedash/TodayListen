@@ -326,7 +326,6 @@ function mapStateToProps(state) {
         isFetching: false,
         items: []
     };
-
     return {
         videos: _.map(videos, ((item) => {
             return item

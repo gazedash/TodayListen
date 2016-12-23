@@ -18,10 +18,9 @@ export function requestVideo(data) {
 
 export function receiveVideo(data, json) {
     const {items = [], ...rest} = json;
-
     return {
-        ...rest,
         type: RECEIVE_VIDEO,
+        ...rest,
         ...data,
         videos: items.map((video) => {
             return video.id.videoId;

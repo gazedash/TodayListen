@@ -36,11 +36,13 @@ export function suggestedVideos(state = {}, action) {
     switch (action.type) {
         case INVALIDATE_VIDEO:
         case RECEIVE_VIDEO:
-        case REQUEST_VIDEO:
-            return {
-                ...state,
-                [action.song]: video(state[action.song], action),
-            };
+            if (action.videos.length !== 0) {
+                return {
+                    ...state,
+                    [action.song]: video(state[action.song], action),
+                };
+            }
+            return state;
         default:
             return state;
     }
