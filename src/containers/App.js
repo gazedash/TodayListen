@@ -2,13 +2,13 @@ import React, {Component, PropTypes} from "react";
 import {connect} from "react-redux";
 import _ from "lodash";
 import YouTube from "react-youtube";
+import IconButton from "material-ui/IconButton";
 import Spinner from "halogen/ScaleLoader";
 import Playlist from "../components/Playlist/Playlist";
 import Controls from "../components/Controls/Controls";
 import Header from "../components/Header/Header";
 import {selectArtist, invalidateArtist, nextArtist} from "../actions/artist";
 import {invalidateSongs} from "../actions/songs";
-import {youTube} from "../api/youtube_api";
 import "./App.css";
 
 class App extends Component {
@@ -17,8 +17,23 @@ class App extends Component {
         this.handleRefreshClick = this.handleRefreshClick.bind(this);
         this.onSearch = this.onSearch.bind(this);
         this.state = {
+            playIfLoaded: false,
+            currentVideoInstance: 0,
+            isOpen: false,
             playingId: 0,
             isPlaying: false,
+        }
+    }
+
+    componentWillReceiveProps(nextProps) {
+        // On playlist end: play if isPlaying and new songs fetched
+        const {fetchFinishArtist, videos} = this.props;
+        const {isPlaying, playIfLoaded} = this.state;
+        if (isPlaying && nextProps.fetchFinishArtist !== fetchFinishArtist && videos !== nextProps.videos && playIfLoaded) {
+            this.next();
+            this.setState({
+                playIfLoaded: false,
+            })
         }
     }
 
@@ -64,8 +79,7 @@ class App extends Component {
             if (offset !== playingId) {
                 const {videos} = this.props;
                 const videoId = videos[offset].items[0];
-                console.log(videos[offset]);
-                player.loadVideoByUrl(youTube.getVideoUrl(videoId)).then(() => {
+                player.loadVideoById(videoId).then(() => {
                     if (isPlaying || play) {
                         if (play) {
                             this.setState({
@@ -94,6 +108,26 @@ class App extends Component {
         }
     }
 
+    tryNext(forward = true) {
+        const player = _.get(this.refs, ['youtube', 'internalPlayer']);
+        if (player) {
+            const {videos} = this.props;
+            const {currentVideoInstance, playingId, isPlaying} = this.state;
+            const items = videos[playingId].items;
+            const diff = currentVideoInstance + (forward ? 1 : -1);
+            if (items.length !== 0 && diff < items.length && diff >= 0) {
+                player.cueVideoById(items[diff]).then(() => {
+                    if (isPlaying) {
+                        player.playVideo();
+                    }
+                });
+                this.setState((prevState) => ({
+                    currentVideoInstance: diff,
+                }))
+            }
+        }
+    }
+
     next(forward = true) {
         const {playingId} = this.state;
         const {videos} = this.props;
@@ -111,6 +145,9 @@ class App extends Component {
             // On playlist end
             if (forward) {
                 this.props.dispatch(nextArtist(videos[playingId].artist));
+                this.setState({
+                    playIfLoaded: true,
+                })
             }
         }
     }
@@ -129,9 +166,9 @@ class App extends Component {
         return (
             <Controls
                 isPlaying={this.state.isPlaying}
-                next={() => this.next()}
                 prev={() => this.next(false)}
                 play={() => this.play()}
+                next={() => this.next()}
             />)
     }
 
@@ -159,6 +196,26 @@ class App extends Component {
         )
     }
 
+    renderTryPopup() {
+        if (this.state.isOpen) {
+            return (
+                <div className="player-try-container">
+                    <IconButton
+                        className="player-try-button"
+                        iconClassName="fa fa-chevron-circle-left"
+                        onClick={() => this.tryNext(false)}
+                    />
+                    <IconButton
+                        className="control-button"
+                        iconClassName="fa fa-chevron-circle-right"
+                        onClick={() => this.tryNext()}
+                    />
+                </div>
+            )
+        }
+        return null;
+    }
+
     renderPlayer() {
         const {videos} = this.props;
 
@@ -175,7 +232,12 @@ class App extends Component {
         }
 
         return (
-            <div className="player-container">
+            <div
+                className="player-container"
+                onMouseEnter={() => this.setState({isOpen: true,})}
+                onMouseLeave={() => this.setState({isOpen: false,})}
+            >
+                {this.renderTryPopup()}
                 <YouTube
                     onEnd={() => this.next()}
                     onPlay={() => this.onPlayerPlayClick()}
@@ -233,15 +295,20 @@ App.propTypes = {
     songs: PropTypes.array.isRequired,
     artistsFetching: PropTypes.bool.isRequired,
     songsFetching: PropTypes.bool.isRequired,
-    dispatch: PropTypes.func.isRequired
+    dispatch: PropTypes.func.isRequired,
+    fetchFinishArtist: PropTypes.oneOfType([
+        React.PropTypes.string,
+        React.PropTypes.object,
+    ]),
 };
 
 App.defaultProps = {
     selectedArtist: null,
+    fetchFinishArtist: null,
 };
 
 function mapStateToProps(state) {
-    const {selectedArtist, suggestedArtists, popularSongs, suggestedVideos: videos} = state;
+    const {selectedArtist, suggestedArtists, popularSongs, suggestedVideos: videos, fetchFinishArtist} = state;
     const {
         isFetching: artistsFetching,
         lastUpdated: artistsLastUpdated,
@@ -264,6 +331,7 @@ function mapStateToProps(state) {
         videos: _.map(videos, ((item) => {
             return item
         })),
+        fetchFinishArtist,
         suggestedArtists: suggestedArtistsList,
         selectedArtist,
         artists: suggestedArtists,

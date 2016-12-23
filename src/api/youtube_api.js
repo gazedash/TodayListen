@@ -16,7 +16,7 @@ export class YouTube {
 
     search(query) {
         const encodedQuery = encodeURIComponent(query);
-        // console.log(`${this.buildQuery(SEARCH)}&q=${query}&part=id`);
+        console.log(`${this.buildQuery(SEARCH)}&q=${encodedQuery}&part=id&type=video`);
         return `${this.buildQuery(SEARCH)}&q=${encodedQuery}&part=id&videoEmbeddable=true&type=video`
     }
 

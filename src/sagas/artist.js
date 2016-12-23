@@ -67,10 +67,11 @@ export function* startup() {
 function* mainSaga(artist) {
     if (artist && artist !== '') {
         yield fork(fetchArtists, artist);
-        let songs = yield call(fetchSongs, artist);
+        const songs = yield call(fetchSongs, artist);
         if (songs) {
-            yield songs.map(song => fork(fetchVideo, song));
+            yield songs.map(song => call(fetchVideo, song));
         }
+        yield put(actions.fetchFinishArtist(artist));
     }
 }
 

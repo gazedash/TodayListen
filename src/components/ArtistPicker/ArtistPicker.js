@@ -24,7 +24,7 @@ export default class ArtistPicker extends React.Component {
     }
 
     renderImage(artist) {
-        const unknown = (<div className="artist-image" >
+        const unknown = (<div className="artist-image">
                 <i className="fa fa-4x fa-question unknown-artist"
                 />
             </div>

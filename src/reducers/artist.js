@@ -1,9 +1,25 @@
-import {INVALIDATE_ARTIST, SELECT_ARTIST, RECEIVE_SIMILAR_ARTISTS, REQUEST_SIMILAR_ARTISTS, NEXT_ARTIST} from "../actions/artist";
+import {
+    INVALIDATE_ARTIST,
+    SELECT_ARTIST,
+    RECEIVE_SIMILAR_ARTISTS,
+    REQUEST_SIMILAR_ARTISTS,
+    NEXT_ARTIST,
+    FETCH_FINISH_ARTIST
+} from "../actions/artist";
 
 export function selectedArtist(state = 'Mono', action) {
     switch (action.type) {
         case NEXT_ARTIST:
         case SELECT_ARTIST:
+            return action.artist;
+        default:
+            return state;
+    }
+}
+
+export function fetchFinishArtist(state = {}, action) {
+    switch (action.type) {
+        case FETCH_FINISH_ARTIST:
             return action.artist;
         default:
             return state;

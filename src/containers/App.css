@@ -27,3 +27,7 @@
     position: absolute;
     top: 40%;
 }
+
+.player-try-container {
+    background-color: #ccc;
+}

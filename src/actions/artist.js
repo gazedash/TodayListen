@@ -3,10 +3,18 @@ export const RECEIVE_SIMILAR_ARTISTS = 'RECEIVE_SIMILAR_ARTISTS';
 export const SELECT_ARTIST = 'SELECT_ARTIST';
 export const INVALIDATE_ARTIST = 'INVALIDATE_ARTIST';
 export const NEXT_ARTIST = 'NEXT_ARTIST';
+export const FETCH_FINISH_ARTIST = 'FETCH_FINISH_ARTIST';
 
 export function selectArtist(artist) {
     return {
         type: SELECT_ARTIST,
+        artist,
+    }
+}
+
+export function fetchFinishArtist(artist) {
+    return {
+        type: FETCH_FINISH_ARTIST,
         artist,
     }
 }
