@@ -34,6 +34,10 @@ export default class Playlist extends Component {
     }
 
     render() {
+        if (this.props.items.length === 0) {
+            return null;
+        }
+
         return (
             <List
                 style={this.props.style}
