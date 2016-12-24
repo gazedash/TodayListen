@@ -11,6 +11,7 @@ import {
 export function selectedArtist(state = 'Mono', action) {
     switch (action.type) {
         case NEXT_ARTIST:
+            return state;
         case SELECT_ARTIST:
             return action.artist;
         default:

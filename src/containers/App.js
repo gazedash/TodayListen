@@ -7,7 +7,7 @@ import Controls from "../components/Controls/Controls";
 import Player from "../components/Player/Player";
 import Header from "../components/Header/Header";
 import {selectArtist, invalidateArtist, nextArtist} from "../actions/artist";
-import {invalidateSongs, removePopularSong} from "../actions/songs";
+import {invalidateSongs, removePopularSong, removeAllPopularSongs} from "../actions/songs";
 import "./App.css";
 
 class App extends Component {
@@ -21,6 +21,7 @@ class App extends Component {
         this.handlePlayerPlayClick = this.handlePlayerPlayClick.bind(this);
         this.handleTryNext = this.handleTryNext.bind(this);
         this.handleDeleteSong = this.handleDeleteSong.bind(this);
+        this.handleClearClick = this.handleClearClick.bind(this);
         this.state = {
             playIfLoaded: false,
             currentVideoInstance: 0,
@@ -51,6 +52,14 @@ class App extends Component {
             dispatch(invalidateSongs(selectedArtist));
         }
     }
+
+    handleClearClick(e) {
+        e.preventDefault();
+
+        const {dispatch} = this.props;
+        dispatch(removeAllPopularSongs());
+    }
+
 
     handleSearch(selectedArtist) {
         const {dispatch} = this.props;
@@ -220,6 +229,7 @@ class App extends Component {
                 {this.renderPlaylist()}
                 {this.renderPlayer()}
                 {<h6><a href='#' onClick={this.handleRefreshClick}> Refresh</a></h6>}
+                {<h6><a href='#' onClick={this.handleClearClick}> Delete All</a></h6>}
             </section>
         )
     }
