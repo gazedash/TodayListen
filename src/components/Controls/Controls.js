@@ -19,7 +19,7 @@ const Controls = React.createClass({
                         <IconButton
                             className="control-button"
                             iconClassName="fa fa-chevron-circle-left control-icon"
-                            onClick={this.props.prev.bind(this, false)}
+                            onClick={() => this.props.prev(false)}
                         />
                         <IconButton
                             className="control-button"
@@ -29,7 +29,7 @@ const Controls = React.createClass({
                         <IconButton
                             className="control-button"
                             iconClassName="fa fa-chevron-circle-right control-icon"
-                            onClick={this.props.next.bind(this, false)}
+                            onClick={() => this.props.next()}
                         />
                     </ToolbarGroup>
                 </BottomNavigation>

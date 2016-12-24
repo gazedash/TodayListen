@@ -8,11 +8,6 @@ function video(state = {
     items: [],
 }, action) {
     switch (action.type) {
-        case INVALIDATE_VIDEO:
-            return {
-                ...state,
-                didInvalidate: true,
-            };
         case REQUEST_VIDEO:
             return {
                 ...state,
@@ -37,6 +32,10 @@ function video(state = {
 export function suggestedVideos(state = {}, action) {
     switch (action.type) {
         case INVALIDATE_VIDEO:
+            return {
+                ...state,
+                didInvalidate: true,
+            };
         case REMOVE_POPULAR_SONG:
             const songId = action.song;
             return {..._.omitBy(state, (song) => song.song === songId )};

@@ -6,11 +6,6 @@ function songs(state = {
     items: [],
 }, action) {
     switch (action.type) {
-        case INVALIDATE_SONGS:
-            return {
-                ...state,
-                didInvalidate: true,
-            };
         case REQUEST_POPULAR_SONGS:
             return {
                 ...state,
@@ -33,6 +28,10 @@ function songs(state = {
 export function popularSongs(state = {}, action) {
     switch (action.type) {
         case INVALIDATE_SONGS:
+            return {
+                ...state,
+                didInvalidate: true,
+            };
         case RECEIVE_POPULAR_SONGS:
             if (action.songs.length !== 0) {
                 return {

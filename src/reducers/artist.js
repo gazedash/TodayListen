@@ -40,11 +40,6 @@ function artists(state = {
     items: [],
 }, action) {
     switch (action.type) {
-        case INVALIDATE_ARTIST:
-            return {
-                ...state,
-                didInvalidate: true,
-            };
         case REQUEST_SIMILAR_ARTISTS:
             return {
                 ...state,
@@ -67,6 +62,10 @@ function artists(state = {
 export function suggestedArtists(state = {}, action) {
     switch (action.type) {
         case INVALIDATE_ARTIST:
+            return {
+                ...state,
+                didInvalidate: true,
+            };
         case RECEIVE_SIMILAR_ARTISTS:
             if (action.items.length !== 0) {
                 return {

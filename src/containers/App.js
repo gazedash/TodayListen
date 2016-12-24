@@ -14,8 +14,13 @@ class App extends Component {
     constructor(props) {
         super(props);
         this.handleRefreshClick = this.handleRefreshClick.bind(this);
-        this.onSearch = this.onSearch.bind(this);
-        this.deleteSong = this.deleteSong.bind(this);
+        this.handleSearch = this.handleSearch.bind(this);
+        this.handlePlayClick = this.handlePlayClick.bind(this);
+        this.handleLoadVideo = this.handleLoadVideo.bind(this);
+        this.handleNext = this.handleNext.bind(this);
+        this.handlePlayerPlayClick = this.handlePlayerPlayClick.bind(this);
+        this.handleTryNext = this.handleTryNext.bind(this);
+        this.handleDeleteSong = this.handleDeleteSong.bind(this);
         this.state = {
             playIfLoaded: false,
             currentVideoInstance: 0,
@@ -26,18 +31,14 @@ class App extends Component {
 
     componentWillReceiveProps(nextProps) {
         // On playlist end: play if isPlaying and new songs fetched
-        const {nextArtist, videos} = this.props;
+        const {nextArtist} = this.props;
         const {playIfLoaded} = this.state;
-        if (nextProps.nextArtist !== nextArtist && nextProps.videos !== videos && playIfLoaded) {
-            this.next();
+        if (nextProps.nextArtist !== nextArtist && playIfLoaded) {
+            this.handleNext();
             this.setState({
                 playIfLoaded: false,
             })
         }
-    }
-
-    shouldComponentUpdate(nextProps) {
-        return !!nextProps.videos.length;
     }
 
     handleRefreshClick(e) {
@@ -51,13 +52,13 @@ class App extends Component {
         }
     }
 
-    onSearch(selectedArtist) {
+    handleSearch(selectedArtist) {
         const {dispatch} = this.props;
         dispatch(selectArtist(selectedArtist));
     }
 
-    play(index) {
-        const player = _.get(this.refs, ['youtube', 'refs' ,'youtube', 'internalPlayer']);
+    handlePlayClick(index) {
+        const player = _.get(this.refs, ['youtube', 'refs', 'youtube', 'internalPlayer']);
         if (player) {
             if (this.state.isPlaying) {
                 player.pauseVideo();
@@ -71,10 +72,10 @@ class App extends Component {
         }
     }
 
-    loadVideo(offset, play) {
-        const {isPlaying, playingId} = this.state;
-        const player = _.get(this.refs, ['youtube', 'refs' ,'youtube', 'internalPlayer']);
+    handleLoadVideo(offset, play) {
+        const player = _.get(this.refs, ['youtube', 'refs', 'youtube', 'internalPlayer']);
         if (player) {
+            const {isPlaying, playingId} = this.state;
             if (offset !== playingId) {
                 const {videos} = this.props;
                 const videoId = videos[offset].items[0];
@@ -107,7 +108,7 @@ class App extends Component {
         }
     }
 
-    next(forward = true) {
+    handleNext(forward = true) {
         const {playingId} = this.state;
         const {videos} = this.props;
         let shouldPlay = playingId > 0;
@@ -116,13 +117,13 @@ class App extends Component {
         }
         if (shouldPlay) {
             const diff = playingId + (forward ? 1 : -1);
-            this.loadVideo(diff);
+            this.handleLoadVideo(diff);
             this.setState((prevState) => ({
                 playingId: diff,
             }));
         } else {
             // On playlist end
-            if (forward) {
+            if (forward && videos.length !== 0) {
                 this.props.dispatch(nextArtist(videos[playingId].artist));
                 this.setState({
                     playIfLoaded: true,
@@ -131,30 +132,35 @@ class App extends Component {
         }
     }
 
-    onPlayerPlayClick(cond) {
+    handlePlayerPlayClick(play) {
         this.setState({
-            isPlaying: cond,
+            isPlaying: play,
         });
     }
 
-    onTryNext(diff) {
+    handleTryNext(diff) {
         this.setState((prevState) => ({
             currentVideoInstance: diff,
         }))
     }
 
-    deleteSong(i) {
+    handleDeleteSong(i) {
         const {videos, dispatch} = this.props;
-        dispatch(removePopularSong(videos[i].song));
+        if (videos.length !== 0) {
+            dispatch(removePopularSong(videos[i].song));
+            this.setState((prevState) => ({
+                playingId: i < prevState.playingId ? prevState.playingId - 1 : prevState.playingId,
+            }));
+        }
     }
 
     renderControls() {
         return (
             <Controls
                 isPlaying={this.state.isPlaying}
-                prev={() => this.next(false)}
-                play={() => this.play()}
-                next={() => this.next()}
+                prev={this.handleNext}
+                play={this.handlePlayClick}
+                next={this.handleNext}
             />)
     }
 
@@ -172,8 +178,8 @@ class App extends Component {
             <div>
                 {spinner}
                 <Playlist
-                    onDeleteClick={this.deleteSong}
-                    onClick={(i) => this.loadVideo(i, true)}
+                    onDeleteClick={this.handleDeleteSong}
+                    onClick={this.handleLoadVideo}
                     items={videos}
                     isPlaying={this.state.isPlaying}
                     playingId={this.state.playingId}
@@ -193,9 +199,9 @@ class App extends Component {
                 isPlaying={this.state.isPlaying}
                 playingId={this.state.playingId}
                 videos={videos}
-                onPlayerPlayClick={(cond) => this.onPlayerPlayClick(cond)}
-                onTryNext={(val) => this.onTryNext(val)}
-                onNext={() => this.next()}
+                onPlayerPlayClick={this.handlePlayerPlayClick}
+                onTryNext={this.handleTryNext}
+                onNext={this.handleNext}
             />
         )
     }
@@ -228,7 +234,7 @@ class App extends Component {
                         }
                         return newArray;
                     }, [])}
-                    onSearch={this.onSearch}
+                    onSearch={this.handleSearch}
                 />
                 {this.renderPage()}
                 {this.renderFooter()}
@@ -263,11 +269,10 @@ function mapStateToProps(state) {
     };
 
     const {isFetching, artist: nextArtist} = fetchArtist;
-
     return {
-        videos: _.map(videos, ((item) => {
+        videos: _.map(videos, (item) => {
             return item
-        })),
+        }),
         nextArtist,
         isFetching,
         suggestedArtists: suggestedArtistsList,

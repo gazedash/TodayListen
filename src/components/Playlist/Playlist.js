@@ -47,7 +47,7 @@ export default class Playlist extends Component {
                     return (
                         <ListItem
                             className="song-item"
-                            onTouchTap={this.props.onClick.bind(this, i, song.artist)}
+                            onTouchTap={() => this.props.onClick(i, song.artist)}
                             leftIcon={this.renderIcon(i)}
                             rightIconButton={this.renderRemoveButton(i)}
                             key={i}

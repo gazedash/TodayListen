@@ -1,10 +1,7 @@
-import React, {
-    Component,
-    PropTypes,
-} from 'react';
+import React, {Component, PropTypes} from "react";
 import IconButton from "material-ui/IconButton";
 import YouTube from "react-youtube";
-import _ from 'lodash';
+import _ from "lodash";
 
 class Player extends Component {
     constructor(props, context) {
@@ -12,14 +9,6 @@ class Player extends Component {
 
         this.state = {
             isOpen: false,
-        }
-    }
-
-    handlePlayerPlayClick(play = true) {
-        const {isPlaying} = this.props;
-        const cond = play ? !isPlaying : isPlaying;
-        if (cond) {
-            this.props.onPlayerPlayClick(cond);
         }
     }
 
@@ -85,9 +74,9 @@ class Player extends Component {
             >
                 {this.renderTryPopup()}
                 <YouTube
-                    onEnd={() => this.props.onNext()}
-                    onPlay={() => this.handlePlayerPlayClick()}
-                    onPause={() => this.handlePlayerPlayClick(false)}
+                    onEnd={this.props.onNext}
+                    onPlay={() => this.props.onPlayerPlayClick(true)}
+                    onPause={() => this.props.onPlayerPlayClick(false)}
                     ref={this.props.fakeRef}
                     opts={opts}
                     videoId={_.get(videos[this.props.playingId], "items[0]")}
