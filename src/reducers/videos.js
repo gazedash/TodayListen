@@ -1,4 +1,6 @@
 import {INVALIDATE_VIDEO, RECEIVE_VIDEO, REQUEST_VIDEO} from "../actions/videos";
+import {REMOVE_POPULAR_SONG} from "../actions/songs";
+import _ from 'lodash';
 
 function video(state = {
     isFetching: false,
@@ -35,6 +37,9 @@ function video(state = {
 export function suggestedVideos(state = {}, action) {
     switch (action.type) {
         case INVALIDATE_VIDEO:
+        case REMOVE_POPULAR_SONG:
+            const songId = action.song;
+            return {..._.omitBy(state, (song) => song.song === songId )};
         case RECEIVE_VIDEO:
             if (action.videos.length !== 0) {
                 return {

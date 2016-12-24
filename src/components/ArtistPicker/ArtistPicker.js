@@ -58,9 +58,11 @@ export default class ArtistPicker extends React.Component {
                     leftIcon={null}
                     onClick={() => this.onArtistClick(index)}
                 >
-                    <div className="artist-image-container">
-                        {this.renderImage(artist)}
-                        <div className="artist-name">{artist.name}</div>
+                    <div className="artist-image-container-container">
+                        <div className="artist-image-container">
+                            {this.renderImage(artist)}
+                            <div className="artist-name">{artist.name}</div>
+                        </div>
                     </div>
                 </ListItem>
             </div>

@@ -10,7 +10,7 @@ function fetchSongsApi(artist) {
         .then(response => response.json())
         .then(json => {
             const songs = _.get(json, ['toptracks', 'track'], []);
-            return _.map(songs, (song) => ({artist: artist, song: `${artist} - ${song.name}`}));
+            return songs.map((song) => ({artist: artist, song: `${artist} - ${song.name}`}));
         });
 }
 

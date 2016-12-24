@@ -1,6 +1,7 @@
 export const REQUEST_POPULAR_SONGS = 'REQUEST_POPULAR_SONGS';
 export const RECEIVE_POPULAR_SONGS = 'RECEIVE_POPULAR_SONGS';
 export const INVALIDATE_SONGS = 'INVALIDATE_SONGS';
+export const REMOVE_POPULAR_SONG = 'REMOVE_POPULAR_SONG';
 
 export function invalidateSongs(artist) {
     return {
@@ -22,5 +23,12 @@ export function receivePopular(artist, songs) {
         artist,
         songs,
         receivedAt: Date.now(),
+    }
+}
+
+export function removePopularSong(song) {
+    return {
+        type: REMOVE_POPULAR_SONG,
+        song,
     }
 }

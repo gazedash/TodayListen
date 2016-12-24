@@ -21,6 +21,18 @@ export default class Playlist extends Component {
         );
     }
 
+    renderRemoveButton(i) {
+        return (<IconButton
+                iconStyle={{
+                    fontSize: 10,
+                }}
+                onTouchTap={() => this.props.onDeleteClick(i)}
+                className="play-button"
+                iconClassName="fa fa-minus"
+            />
+        );
+    }
+
     render() {
         return (
             <List
@@ -31,8 +43,9 @@ export default class Playlist extends Component {
                     return (
                         <ListItem
                             className="song-item"
-                            onClick={this.props.onClick.bind(this, i, song.artist)}
+                            onTouchTap={this.props.onClick.bind(this, i, song.artist)}
                             leftIcon={this.renderIcon(i)}
+                            rightIconButton={this.renderRemoveButton(i)}
                             key={i}
                         >
                             {song.song}
@@ -46,6 +59,7 @@ export default class Playlist extends Component {
 
 Playlist.propTypes = {
     onClick: PropTypes.func.isRequired,
+    onDeleteClick: PropTypes.func.isRequired,
     isPlaying: PropTypes.bool.isRequired,
     playingId: PropTypes.number.isRequired,
     opts: PropTypes.object,

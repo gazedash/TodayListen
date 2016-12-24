@@ -7,7 +7,7 @@ import Controls from "../components/Controls/Controls";
 import Player from "../components/Player/Player";
 import Header from "../components/Header/Header";
 import {selectArtist, invalidateArtist, nextArtist} from "../actions/artist";
-import {invalidateSongs} from "../actions/songs";
+import {invalidateSongs, removePopularSong} from "../actions/songs";
 import "./App.css";
 
 class App extends Component {
@@ -15,6 +15,7 @@ class App extends Component {
         super(props);
         this.handleRefreshClick = this.handleRefreshClick.bind(this);
         this.onSearch = this.onSearch.bind(this);
+        this.deleteSong = this.deleteSong.bind(this);
         this.state = {
             playIfLoaded: false,
             currentVideoInstance: 0,
@@ -142,6 +143,11 @@ class App extends Component {
         }))
     }
 
+    deleteSong(i) {
+        const {videos, dispatch} = this.props;
+        dispatch(removePopularSong(videos[i].song));
+    }
+
     renderControls() {
         return (
             <Controls
@@ -166,6 +172,7 @@ class App extends Component {
             <div>
                 {spinner}
                 <Playlist
+                    onDeleteClick={this.deleteSong}
                     onClick={(i) => this.loadVideo(i, true)}
                     items={videos}
                     isPlaying={this.state.isPlaying}
@@ -246,7 +253,7 @@ App.defaultProps = {
 };
 
 function mapStateToProps(state) {
-    const {selectedArtist, suggestedArtists, suggestedVideos: videos, fetchArtist} = state;
+    const {selectedArtist, suggestedArtists, suggestedVideos: videos = {}, fetchArtist} = state;
     const {
         lastUpdated: artistsLastUpdated,
         items: suggestedArtistsList,
