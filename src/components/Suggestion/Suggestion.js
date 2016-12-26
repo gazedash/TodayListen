@@ -8,23 +8,26 @@ class Suggestion extends Component {
         const {correction, correctionSuccess} = this.props;
         const corrected = correction && correctionSuccess;
         return (
-            <Paper zDepth={1}>
-                <div className="search-error">
-                    Sorry, I couldn't find it.
-                    {corrected ?
-                        <div className="suggest-wrapper">
-                            <div className="suggest-text">Try suggestion:</div>
-                            <div className="suggest-button-wrapper" onClick={this.props.onClick}
-                            >{correction}
-                                <IconButton
-                                    className="search-button-error"
-                                    iconClassName="fa fa-superpowers search-icon-error"
-                                />
+            <div className="suggest-root">
+                <Paper zDepth={2}>
+                    <div className="search-error">
+                        Sorry, I couldn't find it.
+                        {corrected ?
+                            <div className="suggest-wrapper">
+                                <div className="suggest-text">Try this:</div>
+                                <div className="suggest-button-wrapper" onClick={this.props.onClick}
+                                >{correction}
+                                    <IconButton
+                                        className="search-button-error"
+                                        iconClassName="fa fa-superpowers search-icon-error"
+                                    />
+                                </div>
                             </div>
-                        </div>
-                        : null}
-                </div>
-            </Paper>
+                            : null}
+                    </div>
+                </Paper>
+
+            </div>
         )
     }
 }
