@@ -18,6 +18,29 @@ function* fetchArtists(artist) {
     yield put(actions.receiveSimilar(artist, artists));
 }
 
+function fetchArtistCorrectionApi(artist) {
+    const getCorrection = lastFm.getCorrection(artist);
+    return fetch(getCorrection)
+        .then(response => response.json())
+        .then(json => {
+            // TODO: check on multiple corrections
+            return _.get(json, ['corrections', 'correction', 'artist'], {});
+        });
+}
+
+function* fetchArtistCorrection(artist) {
+    yield put(actions.requestArtistCorrection(artist));
+    const data = yield call(fetchArtistCorrectionApi, artist);
+    const artistCorrectedName = _.get(data, 'name', '');
+    if (artistCorrectedName) {
+        yield put(actions.receiveArtistCorrection(artistCorrectedName));
+        return artistCorrectedName;
+    } else {
+        yield put(actions.receiveFailArtistCorrection(artist));
+        return '';
+    }
+}
+
 export function* invalidateArtist() {
     while (true) {
         const {artist} = yield take(actions.INVALIDATE_ARTIST);
@@ -29,7 +52,6 @@ export function* nextArtistChange() {
     while (true) {
         const prevArtist = yield select(selectedArtistSelector);
         yield take(actions.SELECT_ARTIST);
-
         const newArtist = yield select(selectedArtistSelector);
         const suggestedArtists = yield select(suggestedArtistsSelector);
         if (prevArtist !== newArtist && !suggestedArtists[newArtist]) {
@@ -57,6 +79,15 @@ export function* nextArtistAuto() {
     }
 }
 
+export function* onFetchFailArtist() {
+    while (true) {
+        const {artist} = yield take(actions.FETCH_FAIL_ARTIST);
+        if (artist) {
+            yield fork(fetchArtistCorrection, artist);
+        }
+    }
+}
+
 export function* startup() {
     const selectedArtist = yield select(selectedArtistSelector);
     if (selectedArtist !== '') {
@@ -69,10 +100,12 @@ function* mainSaga(artist) {
         yield put(actions.fetchProgressArtist(artist));
         yield fork(fetchArtists, artist);
         const songs = yield call(fetchSongs, artist);
-        if (songs) {
+        if (songs.length !== 0) {
             yield songs.map(song => call(fetchVideo, song));
+            yield put(actions.fetchFinishArtist(artist));
+        } else {
+            yield put(actions.fetchFailArtist(artist));
         }
-        yield put(actions.fetchFinishArtist(artist));
     }
 }
 
@@ -81,4 +114,5 @@ export default function* root() {
     yield fork(nextArtistChange);
     yield fork(nextArtistAuto);
     yield fork(invalidateArtist);
+    yield fork(onFetchFailArtist);
 }

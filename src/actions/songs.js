@@ -34,7 +34,7 @@ export function removePopularSong(song) {
     }
 }
 
-export function removeAllPopularSongs() {
+export function removeAllSongs() {
     return {
         type: REMOVE_ALL_POPULAR_SONGS,
     }

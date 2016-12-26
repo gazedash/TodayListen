@@ -1,6 +1,7 @@
 export const LAST_FM = "https://ws.audioscrobbler.com";
 export const API_VERSION = "2.0";
 export const GET_SIMILAR_ARTISTS = "artist.getsimilar";
+export const GET_ARTIST_CORRECTION = "artist.getcorrection";
 export const GET_POPULAR_TRACKS = "artist.getTopTracks";
 export const API_KEY = "TODAY_LISTEN";
 
@@ -19,9 +20,14 @@ export class LastFm {
         return `${this.buildQuery(GET_SIMILAR_ARTISTS)}&artist=${encodedArtist}&limit=${limit}`;
     }
 
-    getPopularSongs(artist, limit = 10) {
+    getCorrection(artist) {
         const encodedArtist = encodeURIComponent(artist);
-        return `${this.buildQuery(GET_POPULAR_TRACKS)}&artist=${encodedArtist}&autocorrect=0&limit=${limit}`
+        return `${this.buildQuery(GET_ARTIST_CORRECTION)}&artist=${encodedArtist}`;
+    }
+
+    getPopularSongs(artist, limit = 10, autocorrect=false) {
+        const encodedArtist = encodeURIComponent(artist);
+        return `${this.buildQuery(GET_POPULAR_TRACKS)}&artist=${encodedArtist}&autocorrect=${+autocorrect}&limit=${limit}`
     }
 }
 

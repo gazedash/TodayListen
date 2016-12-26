@@ -69,9 +69,22 @@ export default class ArtistPicker extends React.Component {
         )
     }
 
+    renderList() {
+        const {items} = this.props;
+
+        return (
+            <List className="artist-list">
+                {items.map((artist, i) => {
+                    return (this.renderItem(artist, i))
+                })}
+            </List>
+        );
+    }
+
     render() {
         const {items} = this.props;
         const {selectedId} = this.state;
+        const isDisabled = items.length === 0;
 
         const actions = [
             <FlatButton
@@ -95,8 +108,9 @@ export default class ArtistPicker extends React.Component {
             <div className="artist-picker-container">
                 <IconButton
                     className="suggest-button"
-                    iconClassName="fa fa-lightbulb-o suggest-icon"
+                    iconClassName={"fa fa-lightbulb-o suggest-icon " + (isDisabled ? "suggest-icon-disabled" : "")}
                     onClick={this.props.onOpen}
+                    disabled={isDisabled}
                 />
                 <Dialog
                     bodyClassName="dialog-body"
@@ -108,11 +122,7 @@ export default class ArtistPicker extends React.Component {
                     open={this.props.isOpen}
                     onRequestClose={this.props.onClose}
                 >
-                    <List className="artist-list">
-                        {items.map((artist, i) => {
-                            return (this.renderItem(artist, i))
-                        })}
-                    </List>
+                    {this.renderList()}
                 </Dialog>
             </div>
         );

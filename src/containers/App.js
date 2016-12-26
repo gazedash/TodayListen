@@ -7,7 +7,7 @@ import Controls from "../components/Controls/Controls";
 import Player from "../components/Player/Player";
 import Header from "../components/Header/Header";
 import {selectArtist, invalidateArtist, nextArtist} from "../actions/artist";
-import {invalidateSongs, removePopularSong, removeAllPopularSongs} from "../actions/songs";
+import {invalidateSongs, removePopularSong, removeAllSongs} from "../actions/songs";
 import "./App.css";
 
 class App extends Component {
@@ -57,13 +57,12 @@ class App extends Component {
         e.preventDefault();
 
         const {dispatch} = this.props;
-        dispatch(removeAllPopularSongs());
+        dispatch(removeAllSongs());
     }
 
-
-    handleSearch(selectedArtist) {
+    handleSearch(artist) {
         const {dispatch} = this.props;
-        dispatch(selectArtist(selectedArtist));
+        dispatch(selectArtist(artist));
     }
 
     handlePlayClick(index) {
@@ -278,12 +277,13 @@ function mapStateToProps(state) {
         items: []
     };
 
-    const {isFetching, artist: nextArtist} = fetchArtist;
+    const {isFetching, artist: nextArtist, fetchSuccess} = fetchArtist;
     return {
         videos: _.map(videos, (item) => {
             return item
         }),
         nextArtist,
+        fetchSuccess,
         isFetching,
         suggestedArtists: suggestedArtistsList,
         selectedArtist,

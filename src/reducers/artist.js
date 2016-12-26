@@ -5,7 +5,8 @@ import {
     REQUEST_SIMILAR_ARTISTS,
     NEXT_ARTIST,
     FETCH_FINISH_ARTIST,
-    FETCH_PROGRESS_ARTIST,
+    FETCH_PROGRESS_ARTIST, FETCH_FAIL_ARTIST, RECEIVE_ARTIST_CORRECTION, REQUEST_ARTIST_CORRECTION,
+    RECEIVE_FAIL_ARTIST_CORRECTION
 } from "../actions/artist";
 
 export function selectedArtist(state = 'Mono', action) {
@@ -23,12 +24,40 @@ export function fetchArtist(state = {}, action) {
     switch (action.type) {
         case FETCH_PROGRESS_ARTIST:
             return {
+                ...state,
                 isFetching: true,
+                success: false,
+            };
+        case FETCH_FAIL_ARTIST:
+            return {
+                ...state,
+                isFetching: false,
+                success: false,
             };
         case FETCH_FINISH_ARTIST:
             return {
+                ...state,
                 isFetching: false,
+                success: true,
                 artist: action.artist,
+            };
+        case REQUEST_ARTIST_CORRECTION:
+            return {
+                ...state,
+                isCorrectionFetching: true,
+            };
+        case RECEIVE_ARTIST_CORRECTION:
+            return {
+                ...state,
+                isCorrectionFetching: false,
+                correction: action.artist,
+                correctionSuccess: true
+            };
+        case RECEIVE_FAIL_ARTIST_CORRECTION:
+            return {
+                ...state,
+                isCorrectionFetching: false,
+                correctionSuccess: false
             };
         default:
             return state;

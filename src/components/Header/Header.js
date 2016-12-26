@@ -4,8 +4,9 @@ import Search from "../../components/Search/Search";
 import IconButton from "material-ui/IconButton";
 import ArtistPicker from "../ArtistPicker/ArtistPicker";
 import "./Header.css";
+import {connect} from "react-redux";
 
-export default class Header extends Component {
+class Header extends Component {
     constructor(props) {
         super(props);
 
@@ -50,6 +51,7 @@ export default class Header extends Component {
     }
 
     render() {
+        const {correction} = this.props;
         const searchButton = (
             <div className="search-button-container">
                 <IconButton
@@ -59,7 +61,6 @@ export default class Header extends Component {
                 />
             </div>
         );
-
         return (
             <AppBar
                 showMenuIconButton={false}
@@ -70,6 +71,11 @@ export default class Header extends Component {
                 className="app-bar"
             >
                 <Search
+                    correctionSuccess={this.props.correctionSuccess}
+                    onTrySuggestion={() => this.props.onSearch(correction)}
+                    correction={this.props.correction}
+                    success={this.props.success}
+                    fetching={this.props.isFetching}
                     children={searchButton}
                     onKeyPress={(e) => this.onKeyPress(e)}
                     value={this.state.value}
@@ -90,8 +96,25 @@ export default class Header extends Component {
 Header.propTypes = {
     items: PropTypes.array,
     onSearch: PropTypes.func.isRequired,
+    isFetching: PropTypes.bool.isRequired,
+    success: PropTypes.bool.isRequired,
+    correctionSuccess: PropTypes.bool.isRequired,
+    correction: PropTypes.string.isRequired,
     // onPick: PropTypes.func.isRequired,
 };
 Header.defaultProps = {
     items: [],
 };
+
+function mapStateToProps(state) {
+    const {fetchArtist} = state;
+    const {isFetching, success, correction, correctionSuccess} = fetchArtist;
+    return {
+        isFetching,
+        success,
+        correction: correction ? correction : "",
+        correctionSuccess,
+    }
+}
+
+export default connect(mapStateToProps)(Header);
