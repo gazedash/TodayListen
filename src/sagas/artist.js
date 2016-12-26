@@ -51,8 +51,7 @@ export function* invalidateArtist() {
 export function* nextArtistChange() {
     while (true) {
         const prevArtist = yield select(selectedArtistSelector);
-        yield take(actions.SELECT_ARTIST);
-        const newArtist = yield select(selectedArtistSelector);
+        const {artist: newArtist} = yield take(actions.SELECT_ARTIST);
         const suggestedArtists = yield select(suggestedArtistsSelector);
         if (prevArtist !== newArtist && !suggestedArtists[newArtist]) {
             yield fork(mainSaga, newArtist);
@@ -98,9 +97,9 @@ export function* startup() {
 function* mainSaga(artist) {
     if (artist && artist !== '') {
         yield put(actions.fetchProgressArtist(artist));
-        yield fork(fetchArtists, artist);
         const songs = yield call(fetchSongs, artist);
         if (songs.length !== 0) {
+            yield fork(fetchArtists, artist);
             yield songs.map(song => call(fetchVideo, song));
             yield put(actions.fetchFinishArtist(artist));
         } else {

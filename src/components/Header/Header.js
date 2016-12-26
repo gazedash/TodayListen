@@ -17,10 +17,12 @@ class Header extends Component {
         this.handleClose = this.handleClose.bind(this);
         this.handleOpen = this.handleOpen.bind(this);
         this.handleChange = this.handleChange.bind(this);
+        this.handleCorrectClose = this.handleCorrectClose.bind(this);
 
         this.state = {
             value: '',
             open: false,
+            correctionOpen: true,
         };
     }
 
@@ -55,7 +57,16 @@ class Header extends Component {
 
     handleSearch(artist) {
         const {dispatch} = this.props;
+        this.setState({
+            correctionOpen: true,
+        });
         dispatch(selectArtist(artist));
+    }
+
+    handleCorrectClose() {
+        this.setState({
+            correctionOpen: false,
+        });
     }
 
     render() {
@@ -72,7 +83,9 @@ class Header extends Component {
         );
         const errorText = error ? (
                 <Suggestion
+                    open={this.state.correctionOpen}
                     onClick={() => this.handleSearch(correction)}
+                    onCloseClick={this.handleCorrectClose}
                     correction={correction}
                     correctionSuccess={correctionSuccess}
                 />

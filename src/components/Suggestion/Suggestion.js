@@ -5,36 +5,45 @@ import "./Suggestion.css";
 
 class Suggestion extends Component {
     render() {
-        const {correction, correctionSuccess} = this.props;
-        const corrected = correction && correctionSuccess;
-        return (
-            <div className="suggest-root">
-                <Paper zDepth={2}>
-                    <div className="search-error">
-                        Sorry, I couldn't find it.
-                        {corrected ?
-                            <div className="suggest-wrapper">
-                                <div className="suggest-text">Try this:</div>
-                                <div className="suggest-button-wrapper" onClick={this.props.onClick}
-                                >{correction}
-                                    <IconButton
-                                        className="search-button-error"
-                                        iconClassName="fa fa-superpowers search-icon-error"
-                                    />
+        if (this.props.open) {
+            const {correction, correctionSuccess} = this.props;
+            const corrected = correction && correctionSuccess;
+            return (
+                <div className="suggest-root">
+                    <Paper zDepth={2}>
+                        <IconButton
+                            className="suggest-close-button"
+                            iconClassName="fa fa-times search-icon-error"
+                            onClick={this.props.onCloseClick}
+                        />
+                        <div className="search-error">
+                            Sorry, I couldn't find it.
+                            {corrected ?
+                                <div className="suggest-wrapper">
+                                    <div className="suggest-text">Try this:</div>
+                                    <div className="suggest-button-wrapper" onClick={this.props.onClick}
+                                    >{correction}
+                                        <IconButton
+                                            className="search-button-error"
+                                            iconClassName="fa fa-superpowers search-icon-error"
+                                        />
+                                    </div>
                                 </div>
-                            </div>
-                            : null}
-                    </div>
-                </Paper>
-
-            </div>
-        )
+                                : null}
+                        </div>
+                    </Paper>
+                </div>
+            )
+        }
+        return null;
     }
 }
 
 Suggestion.propTypes = {
+    onCloseClick: PropTypes.func.isRequired,
     onClick: PropTypes.func.isRequired,
     correction: PropTypes.string.isRequired,
+    open: PropTypes.bool.isRequired,
     correctionSuccess: PropTypes.bool.isRequired,
 };
 Suggestion.defaultProps = {};

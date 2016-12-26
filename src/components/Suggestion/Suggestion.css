@@ -1,11 +1,17 @@
 .suggest-root {
     padding-top: 10px;
+    width: fit-content;
+}
+
+.suggest-root > div {
+    display: flex;
+    flex-direction: row-reverse;
 }
 
 .search-error {
     color: black;
     background-color: #fff;
-    padding: 13px 13px 10px 13px;
+    padding: 17px 13px 10px 13px;
     font-size: 14px;
 }
 
@@ -31,4 +37,10 @@
 
 .suggest-button-wrapper {
     cursor: pointer;
+}
+
+.suggest-close-button {
+    height: 26px !important;
+    width: 28px !important;
+    padding: 0 !important;
 }
