@@ -1,0 +1,30 @@
+.search-error {
+    color: black;
+    background-color: #fff;
+    padding: 13px 13px 10px 13px;
+    font-size: 14px;
+}
+
+.search-icon-error {
+    color: black;
+    font-size: 14px !important;
+}
+
+.search-button-error {
+    height: 26px !important;
+    width: 28px !important;
+    padding: 0 !important;
+}
+
+.suggest-wrapper {
+    align-items: center;
+    display: flex;
+}
+
+.suggest-text {
+    padding-right: 10px;
+}
+
+.suggest-button-wrapper {
+    cursor: pointer;
+}

@@ -6,7 +6,7 @@ import Playlist from "../components/Playlist/Playlist";
 import Controls from "../components/Controls/Controls";
 import Player from "../components/Player/Player";
 import Header from "../components/Header/Header";
-import {selectArtist, invalidateArtist, nextArtist} from "../actions/artist";
+import {invalidateArtist, nextArtist} from "../actions/artist";
 import {invalidateSongs, removePopularSong, removeAllSongs} from "../actions/songs";
 import "./App.css";
 
@@ -14,7 +14,6 @@ class App extends Component {
     constructor(props) {
         super(props);
         this.handleRefreshClick = this.handleRefreshClick.bind(this);
-        this.handleSearch = this.handleSearch.bind(this);
         this.handlePlayClick = this.handlePlayClick.bind(this);
         this.handleLoadVideo = this.handleLoadVideo.bind(this);
         this.handleNext = this.handleNext.bind(this);
@@ -58,11 +57,6 @@ class App extends Component {
 
         const {dispatch} = this.props;
         dispatch(removeAllSongs());
-    }
-
-    handleSearch(artist) {
-        const {dispatch} = this.props;
-        dispatch(selectArtist(artist));
     }
 
     handlePlayClick(index) {
@@ -162,16 +156,6 @@ class App extends Component {
         }
     }
 
-    renderControls() {
-        return (
-            <Controls
-                isPlaying={this.state.isPlaying}
-                prev={this.handleNext}
-                play={this.handlePlayClick}
-                next={this.handleNext}
-            />)
-    }
-
     renderPlaylist() {
         const {isFetching, videos} = this.props;
         const spinner = (isFetching ? (
@@ -214,14 +198,6 @@ class App extends Component {
         )
     }
 
-    renderFooter() {
-        return (
-            <footer className="footer">
-                {this.renderControls()}
-            </footer>
-        )
-    }
-
     renderPage() {
         return (
             <section className="page-content">
@@ -233,18 +209,28 @@ class App extends Component {
         )
     }
 
+    renderFooter() {
+        return (
+            <footer className="footer">
+                {this.renderControls()}
+            </footer>
+        )
+    }
+
+    renderControls() {
+        return (
+            <Controls
+                isPlaying={this.state.isPlaying}
+                prev={this.handleNext}
+                play={this.handlePlayClick}
+                next={this.handleNext}
+            />)
+    }
+
     render() {
         return (
             <div>
-                <Header
-                    items={this.props.suggestedArtists.reduce((newArray, artist) => {
-                        if (!this.props.artists[artist.name] && newArray.length < 3) {
-                            newArray.push({image: artist.image[2]["#text"], ...artist});
-                        }
-                        return newArray;
-                    }, [])}
-                    onSearch={this.handleSearch}
-                />
+                <Header />
                 {this.renderPage()}
                 {this.renderFooter()}
             </div>
@@ -256,8 +242,6 @@ App.propTypes = {
     nextArtist: PropTypes.string,
     isFetching: PropTypes.bool.isRequired,
     selectedArtist: PropTypes.string,
-    artists: PropTypes.object.isRequired,
-    suggestedArtists: PropTypes.array.isRequired,
     videos: PropTypes.array.isRequired,
     dispatch: PropTypes.func.isRequired,
 };
@@ -268,15 +252,7 @@ App.defaultProps = {
 };
 
 function mapStateToProps(state) {
-    const {selectedArtist, suggestedArtists, suggestedVideos: videos = {}, fetchArtist} = state;
-    const {
-        lastUpdated: artistsLastUpdated,
-        items: suggestedArtistsList,
-    } = suggestedArtists[selectedArtist] || {
-        isFetching: false,
-        items: []
-    };
-
+    const {selectedArtist, suggestedVideos: videos = {}, fetchArtist} = state;
     const {isFetching, artist: nextArtist, fetchSuccess} = fetchArtist;
     return {
         videos: _.map(videos, (item) => {
@@ -285,10 +261,7 @@ function mapStateToProps(state) {
         nextArtist,
         fetchSuccess,
         isFetching,
-        suggestedArtists: suggestedArtistsList,
         selectedArtist,
-        artists: suggestedArtists,
-        artistsLastUpdated,
     }
 }
 

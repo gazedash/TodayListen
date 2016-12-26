@@ -45,6 +45,7 @@ export function fetchArtist(state = {}, action) {
             return {
                 ...state,
                 isCorrectionFetching: true,
+                correctionSuccess: false
             };
         case RECEIVE_ARTIST_CORRECTION:
             return {
