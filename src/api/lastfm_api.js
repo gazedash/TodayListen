@@ -25,7 +25,7 @@ export class LastFm {
         return `${this.buildQuery(GET_ARTIST_CORRECTION)}&artist=${encodedArtist}`;
     }
 
-    getPopularSongs(artist, limit = 10, autocorrect=false) {
+    getPopularSongs(artist, limit = 10, autocorrect = false) {
         const encodedArtist = encodeURIComponent(artist);
         return `${this.buildQuery(GET_POPULAR_TRACKS)}&artist=${encodedArtist}&autocorrect=${+autocorrect}&limit=${limit}`
     }

@@ -5,7 +5,10 @@ import {
     REQUEST_SIMILAR_ARTISTS,
     NEXT_ARTIST,
     FETCH_FINISH_ARTIST,
-    FETCH_PROGRESS_ARTIST, FETCH_FAIL_ARTIST, RECEIVE_ARTIST_CORRECTION, REQUEST_ARTIST_CORRECTION,
+    FETCH_PROGRESS_ARTIST,
+    FETCH_FAIL_ARTIST,
+    RECEIVE_ARTIST_CORRECTION,
+    REQUEST_ARTIST_CORRECTION,
     RECEIVE_FAIL_ARTIST_CORRECTION
 } from "../actions/artist";
 
@@ -15,6 +18,32 @@ export function selectedArtist(state = 'Mono', action) {
             return state;
         case SELECT_ARTIST:
             return action.artist;
+        default:
+            return state;
+    }
+}
+
+export function artistCorrection(state = {}, action) {
+    switch (action.type) {
+        case REQUEST_ARTIST_CORRECTION:
+            return {
+                ...state,
+                isCorrectionFetching: true,
+                correctionSuccess: false
+            };
+        case RECEIVE_ARTIST_CORRECTION:
+            return {
+                ...state,
+                isCorrectionFetching: false,
+                correction: action.artist,
+                correctionSuccess: true
+            };
+        case RECEIVE_FAIL_ARTIST_CORRECTION:
+            return {
+                ...state,
+                isCorrectionFetching: false,
+                correctionSuccess: false
+            };
         default:
             return state;
     }
@@ -40,25 +69,6 @@ export function fetchArtist(state = {}, action) {
                 isFetching: false,
                 success: true,
                 artist: action.artist,
-            };
-        case REQUEST_ARTIST_CORRECTION:
-            return {
-                ...state,
-                isCorrectionFetching: true,
-                correctionSuccess: false
-            };
-        case RECEIVE_ARTIST_CORRECTION:
-            return {
-                ...state,
-                isCorrectionFetching: false,
-                correction: action.artist,
-                correctionSuccess: true
-            };
-        case RECEIVE_FAIL_ARTIST_CORRECTION:
-            return {
-                ...state,
-                isCorrectionFetching: false,
-                correctionSuccess: false
             };
         default:
             return state;

@@ -59,7 +59,7 @@ class Header extends Component {
     }
 
     render() {
-        const {correction, success, isFetching} = this.props;
+        const {correction, correctionSuccess, success, isFetching} = this.props;
         const error = !success && !isFetching;
         const searchButton = (
             <div className="search-button-container">
@@ -71,12 +71,12 @@ class Header extends Component {
             </div>
         );
         const errorText = error ? (
-            <Suggestion
-                onClick={() => this.handleSearch(correction)}
-                correction={correction}
-                correctionSuccess={this.props.correctionSuccess}
-            />
-        ) : null;
+                <Suggestion
+                    onClick={() => this.handleSearch(correction)}
+                    correction={correction}
+                    correctionSuccess={correctionSuccess}
+                />
+            ) : null;
 
         return (
             <AppBar
@@ -123,13 +123,14 @@ Header.propTypes = {
 };
 
 function mapStateToProps(state) {
-    const {selectedArtist, fetchArtist, suggestedArtists} = state;
-    const {isFetching, success, correction, correctionSuccess = false} = fetchArtist;
+    const {selectedArtist, fetchArtist, suggestedArtists, artistCorrection} = state;
+    const {correction, correctionSuccess = false} = artistCorrection;
+    const {isFetching, success} = fetchArtist;
     const {
         items,
     } = suggestedArtists[selectedArtist] || {
         isFetching: false,
-        items: []
+        items: [],
     };
 
     return {

@@ -1,5 +1,5 @@
 import {combineReducers} from "redux";
-import {selectedArtist, suggestedArtists, fetchArtist} from "./artist";
+import {selectedArtist, suggestedArtists, fetchArtist, artistCorrection} from "./artist";
 import {popularSongs} from "./songs";
 import {suggestedVideos} from "./videos";
 
@@ -8,7 +8,8 @@ const rootReducer = combineReducers({
     suggestedVideos,
     popularSongs,
     suggestedArtists,
-    selectedArtist
+    selectedArtist,
+    artistCorrection,
 });
 
 export default rootReducer;
