@@ -78,6 +78,8 @@ class App extends Component {
         const player = _.get(this.refs, ['youtube', 'refs', 'youtube', 'internalPlayer']);
         if (player) {
             const {isPlaying, playingId} = this.state;
+            console.log({playing: this.props.videos[offset].artist,
+                selected: this.props.selectedArtist, next: this.props.nextArtist});
             if (offset !== playingId) {
                 const {videos} = this.props;
                 const videoId = videos[offset].items[0];

@@ -8,6 +8,9 @@ import {fetchVideo} from "./videos";
 import {fetchSongs} from "./songs";
 import Storage from '../utils/storage';
 
+const REQUESTED_ARTISTS = 'requestedArtists';
+const FIRST_TIME = 'firstTime';
+
 function fetchArtistsApi(artist) {
     const getSimilar = lastFm.getSimilarArtists(artist);
     return fetch(getSimilar).then(response => response.json());
@@ -88,7 +91,47 @@ export function* onFetchFailArtist() {
     }
 }
 
+export function* firstTime() {
+    const firstTime = !(yield call(Storage.has, FIRST_TIME));
+    if (firstTime) {
+        yield call(Storage.set, FIRST_TIME, true);
+        console.log("first time...");
+    } else {
+        yield call(loadRecommendedFromCache);
+    }
+}
+
+export function* loadRecommendedFromCache() {
+    const requestedArtists = yield call(Storage.get, REQUESTED_ARTISTS);
+    if (requestedArtists) {
+        // call(recommend)
+    }
+    console.log("NOT FIRST!", requestedArtists);
+}
+
+export function* setRequestedArtistToCache(artist) {
+    if (artist) {
+        let requestedArtists = yield call(Storage.get, REQUESTED_ARTISTS);
+        if (requestedArtists) {
+            if (Array.isArray(requestedArtists)) {
+                const index = requestedArtists.indexOf(artist);
+                if (index < 0) {
+                    requestedArtists.push(artist);
+                } else {
+                    // if exists push back
+                    requestedArtists.splice(index, 1);
+                    requestedArtists.push(artist);
+                }
+            }
+            yield call(Storage.set, REQUESTED_ARTISTS, requestedArtists);
+        } else {
+            yield call(Storage.set, REQUESTED_ARTISTS, [artist]);
+        }
+    }
+}
+
 export function* startup() {
+    yield fork(firstTime);
     const selectedArtist = yield select(selectedArtistSelector);
     if (selectedArtist !== '') {
         yield fork(mainSaga, selectedArtist);
@@ -100,6 +143,7 @@ function* mainSaga(artist) {
         yield put(actions.fetchProgressArtist(artist));
         const songs = yield call(fetchSongs, artist);
         if (songs.length !== 0) {
+            yield fork(setRequestedArtistToCache, artist);
             yield fork(fetchArtists, artist);
             yield songs.map(song => call(fetchVideo, song));
             yield put(actions.fetchFinishArtist(artist));
