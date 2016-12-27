@@ -3,13 +3,14 @@ import _ from "lodash";
 import lastFm from "../api/lastfm_api";
 import {take, put, call, fork, select} from "redux-saga/effects";
 import * as actions from "../actions/artist";
-import {selectedArtistSelector, suggestedArtistsSelector} from "../selectors/index";
+import {nextArtistSelector, suggestedArtistsSelector, selectedArtistSelector} from "../selectors/index";
 import {fetchVideo} from "./videos";
 import {fetchSongs} from "./songs";
 import Storage from '../utils/storage';
 
-const REQUESTED_ARTISTS = 'requestedArtists';
-const FIRST_TIME = 'firstTime';
+const REQUESTED_ARTISTS = 'REQUESTED_ARTISTS';
+const LATEST_ARTIST = 'LATEST_ARTIST';
+const FIRST_TIME = 'FIRST_TIME';
 
 function fetchArtistsApi(artist) {
     const getSimilar = lastFm.getSimilarArtists(artist);
@@ -20,6 +21,7 @@ function* fetchArtists(artist) {
     yield put(actions.requestSimilar(artist));
     const artists = yield call(fetchArtistsApi, artist);
     yield put(actions.receiveSimilar(artist, artists));
+    return artists;
 }
 
 function fetchArtistCorrectionApi(artist) {
@@ -75,10 +77,25 @@ export function* nextArtistAuto() {
                 if (res) nextArtist = item.name;
                 return res;
             });
-            if (nextArtist && nextArtist !== '') {
+            if (nextArtist) {
                 yield fork(mainSaga, nextArtist);
             }
+        } else {
+            if (artist) {
+                // TODO: refactor: on nextArtist from ArtistPicker no items
+                yield fork(mainSaga, artist);
+            }
         }
+    }
+}
+
+export function* fetchFirstSuggested(artist) {
+    // TODO:fixname
+    const {similarartists = {}} = yield call(fetchArtists, artist);
+    const {artist: items = []} = similarartists;
+    if (!_.isEmpty(items)) {
+        console.log(items[0].name);
+        yield fork(mainSaga, items[0].name);
     }
 }
 
@@ -95,22 +112,23 @@ export function* firstTime() {
     const firstTime = !(yield call(Storage.has, FIRST_TIME));
     if (firstTime) {
         yield call(Storage.set, FIRST_TIME, true);
-        console.log("first time...");
     } else {
         yield call(loadRecommendedFromCache);
     }
 }
 
 export function* loadRecommendedFromCache() {
-    const requestedArtists = yield call(Storage.get, REQUESTED_ARTISTS);
-    if (requestedArtists) {
-        // call(recommend)
+    const latestArtist = yield call(Storage.get, LATEST_ARTIST);
+    if (latestArtist) {
+        // TODO: only load
+        yield fork(fetchFirstSuggested, latestArtist);
+        // yield fork(mainSaga, latestArtist);
     }
-    console.log("NOT FIRST!", requestedArtists);
+    console.log("NOT FIRST!", latestArtist);
 }
 
 export function* setRequestedArtistToCache(artist) {
-    if (artist) {
+    if (artist && _.isString(artist)) {
         let requestedArtists = yield call(Storage.get, REQUESTED_ARTISTS);
         if (requestedArtists) {
             if (Array.isArray(requestedArtists)) {
@@ -130,20 +148,28 @@ export function* setRequestedArtistToCache(artist) {
     }
 }
 
+export function* setLatestRequestedArtistToCache(artist) {
+    if (artist && _.isString(artist)) {
+        yield call(Storage.set, LATEST_ARTIST, artist);
+    }
+}
+
 export function* startup() {
     yield fork(firstTime);
-    const selectedArtist = yield select(selectedArtistSelector);
-    if (selectedArtist !== '') {
+    const {artist: selectedArtist} = yield select(nextArtistSelector);
+    if (selectedArtist) {
         yield fork(mainSaga, selectedArtist);
     }
 }
 
 function* mainSaga(artist) {
-    if (artist && artist !== '') {
+    console.log("mainSaga", artist);
+    if (artist) {
         yield put(actions.fetchProgressArtist(artist));
         const songs = yield call(fetchSongs, artist);
         if (songs.length !== 0) {
             yield fork(setRequestedArtistToCache, artist);
+            yield fork(setLatestRequestedArtistToCache, artist);
             yield fork(fetchArtists, artist);
             yield songs.map(song => call(fetchVideo, song));
             yield put(actions.fetchFinishArtist(artist));

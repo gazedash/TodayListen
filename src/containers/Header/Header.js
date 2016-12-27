@@ -2,11 +2,11 @@ import React, {Component, PropTypes} from "react";
 import AppBar from "material-ui/AppBar";
 import Search from "../../components/Search/Search";
 import IconButton from "material-ui/IconButton";
-import ArtistPicker from "../ArtistPicker/ArtistPicker";
-import Suggestion from "../Suggestion/Suggestion";
+import ArtistPicker from "../../components/ArtistPicker/ArtistPicker";
+import Correction from "../../components/Correction/Correction";
 import "./Header.css";
 import {connect} from "react-redux";
-import {selectArtist} from "../../actions/artist";
+import {nextArtist, selectArtist} from "../../actions/artist";
 
 class Header extends Component {
     constructor(props) {
@@ -43,7 +43,7 @@ class Header extends Component {
 
     handleSubmit(artistId) {
         if (artistId) {
-            this.handleSearch(artistId);
+            this.handleSearch(artistId, true);
             this.handleClose();
         }
     }
@@ -55,12 +55,16 @@ class Header extends Component {
         }
     }
 
-    handleSearch(artist) {
+    handleSearch(artist, picker = false) {
         const {dispatch} = this.props;
         this.setState({
             correctionOpen: true,
         });
-        dispatch(selectArtist(artist));
+        if (picker) {
+            dispatch(nextArtist(artist));
+        } else {
+            dispatch(selectArtist(artist));
+        }
     }
 
     handleCorrectClose() {
@@ -82,7 +86,7 @@ class Header extends Component {
             </div>
         );
         const errorText = error ? (
-                <Suggestion
+                <Correction
                     open={this.state.correctionOpen}
                     onClick={() => this.handleSearch(correction)}
                     onCloseClick={this.handleCorrectClose}
@@ -135,12 +139,12 @@ Header.propTypes = {
 };
 
 function mapStateToProps(state) {
-    const {selectedArtist, fetchArtist, suggestedArtists, artistCorrection} = state;
+    const {fetchArtist, suggestedArtists, artistCorrection} = state;
     const {correction = "", correctionSuccess = false} = artistCorrection;
-    const {isFetching = false, success = false} = fetchArtist;
+    const {isFetching = false, success = false, artist: nextArtist} = fetchArtist;
     const {
         items,
-    } = suggestedArtists[selectedArtist] || {
+    } = suggestedArtists[nextArtist] || {
         isFetching: false,
         items: [],
     };

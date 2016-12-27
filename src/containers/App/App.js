@@ -2,12 +2,12 @@ import React, {Component, PropTypes} from "react";
 import {connect} from "react-redux";
 import _ from "lodash";
 import Spinner from "halogen/ScaleLoader";
-import Playlist from "../components/Playlist/Playlist";
-import Controls from "../components/Controls/Controls";
-import Player from "../components/Player/Player";
-import Header from "../components/Header/Header";
-import {invalidateArtist, nextArtist} from "../actions/artist";
-import {invalidateSongs, removePopularSong, removeAllSongs} from "../actions/songs";
+import Playlist from "../../components/Playlist/Playlist";
+import Controls from "../../components/Controls/Controls";
+import Player from "../../components/Player/Player";
+import Header from "../Header/Header";
+import {invalidateArtist, nextArtist} from "../../actions/artist";
+import {invalidateSongs, removePopularSong, removeAllSongs} from "../../actions/songs";
 import "./App.css";
 
 class App extends Component {
@@ -44,11 +44,11 @@ class App extends Component {
     handleRefreshClick(e) {
         e.preventDefault();
 
-        const {dispatch, selectedArtist} = this.props;
+        const {dispatch, nextArtist} = this.props;
 
-        if (selectedArtist) {
-            dispatch(invalidateArtist(selectedArtist));
-            dispatch(invalidateSongs(selectedArtist));
+        if (nextArtist) {
+            dispatch(invalidateArtist(nextArtist));
+            dispatch(invalidateSongs(nextArtist));
         }
     }
 
@@ -78,8 +78,6 @@ class App extends Component {
         const player = _.get(this.refs, ['youtube', 'refs', 'youtube', 'internalPlayer']);
         if (player) {
             const {isPlaying, playingId} = this.state;
-            console.log({playing: this.props.videos[offset].artist,
-                selected: this.props.selectedArtist, next: this.props.nextArtist});
             if (offset !== playingId) {
                 const {videos} = this.props;
                 const videoId = videos[offset].items[0];

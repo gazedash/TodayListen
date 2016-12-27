@@ -11,7 +11,6 @@ import "./index.css";
 // Needed for onTouchTap
 // http://stackoverflow.com/a/34015469/988941
 injectTapEventPlugin();
-Raven.config('https://2d77581fea2b483c9fb980ad92a9a50b@sentry.io/124949').install();
 
 ReactDOM.render(
     <DocumentTitle title='TodayIlisten'>
