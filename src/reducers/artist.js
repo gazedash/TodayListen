@@ -12,7 +12,7 @@ import {
     RECEIVE_FAIL_ARTIST_CORRECTION
 } from "../actions/artist";
 
-export function selectedArtist(state = 'Mono', action) {
+export function selectedArtist(state = '', action) {
     switch (action.type) {
         case NEXT_ARTIST:
             return state;

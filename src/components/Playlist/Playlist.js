@@ -45,15 +45,17 @@ export default class Playlist extends Component {
             >
                 {this.props.items.map((song, i) => {
                     return (
-                        <ListItem
-                            className="song-item"
-                            onTouchTap={() => this.props.onClick(i, song.artist)}
-                            leftIcon={this.renderIcon(i)}
-                            rightIconButton={this.renderRemoveButton(i)}
-                            key={i}
-                        >
-                            {song.song}
-                        </ListItem>
+                        <div className={`song-item-${i % 2}`}>
+                            <ListItem
+                                className="song-item"
+                                onTouchTap={() => this.props.onClick(i, song.artist)}
+                                leftIcon={this.renderIcon(i)}
+                                rightIconButton={this.renderRemoveButton(i)}
+                                key={i}
+                            >
+                                {song.song}
+                            </ListItem>
+                        </div>
                     )
                 })}
             </List>

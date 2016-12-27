@@ -1,6 +1,6 @@
 import fetch from "isomorphic-fetch";
 import _ from "lodash";
-import {lastFm} from "../api/lastfm_api";
+import lastFm from "../api/lastfm_api";
 import {put, call} from "redux-saga/effects";
 import * as actions from "../actions/songs";
 

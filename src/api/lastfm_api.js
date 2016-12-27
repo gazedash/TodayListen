@@ -31,4 +31,4 @@ export class LastFm {
     }
 }
 
-export const lastFm = new LastFm({api_key: API_KEY, version: API_VERSION});
+export default new LastFm({api_key: API_KEY, version: API_VERSION});

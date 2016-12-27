@@ -1,5 +1,6 @@
 {
   "name": "TodayIlisten",
+  "license": "Apache-2.0",
   "version": "0.1.0",
   "private": true,
   "homepage": "https://shoegazerwithak.github.io/TodayIlisten",
@@ -14,6 +15,7 @@
     "isomorphic-fetch": "^2.2.1",
     "lodash": "^4.17.2",
     "material-ui": "^0.16.5",
+    "raven-js": "^3.9.1",
     "react": "^15.4.1",
     "react-document-title": "^2.0.2",
     "react-dom": "^15.4.1",

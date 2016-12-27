@@ -20,3 +20,11 @@
 .song-item {
     font-size: 15px !important;
 }
+
+.song-item-0 {
+    background-color: #fff;
+}
+
+.song-item-1 {
+    background-color: #fafafa;
+}

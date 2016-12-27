@@ -1,11 +1,12 @@
 import fetch from "isomorphic-fetch";
 import _ from "lodash";
-import {lastFm} from "../api/lastfm_api";
+import lastFm from "../api/lastfm_api";
 import {take, put, call, fork, select} from "redux-saga/effects";
 import * as actions from "../actions/artist";
 import {selectedArtistSelector, suggestedArtistsSelector} from "../selectors/index";
 import {fetchVideo} from "./videos";
 import {fetchSongs} from "./songs";
+import Storage from '../utils/storage';
 
 function fetchArtistsApi(artist) {
     const getSimilar = lastFm.getSimilarArtists(artist);

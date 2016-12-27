@@ -229,7 +229,7 @@ class App extends Component {
 
     render() {
         return (
-            <div>
+            <div className="app-container">
                 <Header />
                 {this.renderPage()}
                 {this.renderFooter()}
@@ -253,7 +253,7 @@ App.defaultProps = {
 
 function mapStateToProps(state) {
     const {selectedArtist, suggestedVideos: videos = {}, fetchArtist} = state;
-    const {isFetching, artist: nextArtist, fetchSuccess} = fetchArtist;
+    const {isFetching = false, artist: nextArtist, fetchSuccess = false} = fetchArtist;
     return {
         videos: _.map(videos, (item) => {
             return item

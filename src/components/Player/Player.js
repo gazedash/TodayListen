@@ -25,9 +25,7 @@ class Player extends Component {
                         player.playVideo();
                     }
                 });
-                // ****
                 this.props.onTryNext(diff);
-                // ****
             }
         }
     }

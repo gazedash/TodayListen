@@ -1,5 +1,5 @@
 import fetch from "isomorphic-fetch";
-import {youTube} from "../api/youtube_api";
+import youTube from "../api/youtube_api";
 import {put, call} from "redux-saga/effects";
 import * as actions from "../actions/videos";
 

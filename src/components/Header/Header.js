@@ -132,13 +132,12 @@ Header.propTypes = {
     correctionSuccess: PropTypes.bool.isRequired,
     correction: PropTypes.string.isRequired,
     dispatch: PropTypes.func.isRequired,
-    // onPick: PropTypes.func.isRequired,
 };
 
 function mapStateToProps(state) {
     const {selectedArtist, fetchArtist, suggestedArtists, artistCorrection} = state;
-    const {correction, correctionSuccess = false} = artistCorrection;
-    const {isFetching, success} = fetchArtist;
+    const {correction = "", correctionSuccess = false} = artistCorrection;
+    const {isFetching = false, success = false} = fetchArtist;
     const {
         items,
     } = suggestedArtists[selectedArtist] || {
@@ -150,7 +149,7 @@ function mapStateToProps(state) {
         artists: suggestedArtists,
         isFetching,
         success,
-        correction: correction ? correction : "",
+        correction: correction,
         correctionSuccess,
         items,
     }

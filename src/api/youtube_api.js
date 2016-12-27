@@ -25,4 +25,4 @@ export class YouTube {
     }
 }
 
-export const youTube = new YouTube({api_key: API_KEY, version: API_VERSION});
+export default new YouTube({api_key: API_KEY, version: API_VERSION});
