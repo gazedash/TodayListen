@@ -130,6 +130,11 @@ class App extends Component {
                 this.setState({
                     playIfLoaded: true,
                 });
+            } else {
+                // If there is nothing to play next
+                this.setState({
+                    isPlaying: false,
+                })
             }
         }
     }
