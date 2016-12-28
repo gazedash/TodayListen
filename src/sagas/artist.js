@@ -6,7 +6,7 @@ import * as actions from "../actions/artist";
 import {nextArtistSelector, suggestedArtistsSelector, selectedArtistSelector} from "../selectors/index";
 import {fetchVideo} from "./videos";
 import {fetchSongs} from "./songs";
-import Storage from '../utils/storage';
+import Storage from "../utils/storage";
 
 const REQUESTED_ARTISTS = 'REQUESTED_ARTISTS';
 const LATEST_ARTIST = 'LATEST_ARTIST';
@@ -70,33 +70,43 @@ export function* nextArtistAuto() {
         const {artist} = yield take(actions.NEXT_ARTIST);
         const suggestedArtists = yield select(suggestedArtistsSelector);
         const items = _.get(suggestedArtists, [artist, 'items']);
-        if (items) {
-            let nextArtist = null;
-            items.some((item) => {
-                const res = item.name && !suggestedArtists[item.name];
-                if (res) nextArtist = item.name;
-                return res;
-            });
-            if (nextArtist) {
-                yield fork(mainSaga, nextArtist);
-            }
-        } else {
-            if (artist) {
-                // TODO: refactor: on nextArtist from ArtistPicker no items
-                yield fork(mainSaga, artist);
-            }
+        const requestedArtists = yield call(Storage.get, REQUESTED_ARTISTS);
+        const latestArtist = yield call(Storage.get, LATEST_ARTIST);
+        const nextArtist = yield call(fetchOneNewArtist, items, (item) => {
+            return item.name && !suggestedArtists[items.name] && !requestedArtists.includes(item.name) && latestArtist !== item.name;
+        });
+        if (!nextArtist && artist) {
+            // TODO: refactor: on nextArtist from ArtistPicker no items
+            yield fork(mainSaga, artist);
         }
     }
 }
 
+export function* fetchOneNewArtist(items, fn) {
+    let nextArtist = null;
+
+    if (!_.isEmpty(items)) {
+        items.some((item) => {
+            const res = fn(item);
+            if (res) nextArtist = item.name;
+            return res;
+        });
+        if (nextArtist) {
+            yield fork(mainSaga, nextArtist);
+        }
+    }
+
+    return nextArtist;
+}
+
 export function* fetchFirstSuggested(artist) {
-    // TODO:fixname
     const {similarartists = {}} = yield call(fetchArtists, artist);
     const {artist: items = []} = similarartists;
-    if (!_.isEmpty(items)) {
-        console.log(items[0].name);
-        yield fork(mainSaga, items[0].name);
-    }
+    const requestedArtists = yield call(Storage.get, REQUESTED_ARTISTS);
+    const latestArtist = yield call(Storage.get, LATEST_ARTIST);
+    yield call(fetchOneNewArtist, items, (item) => {
+        return item.name && !requestedArtists.includes(item.name) && latestArtist !== item.name;
+    });
 }
 
 export function* onFetchFailArtist() {
@@ -113,18 +123,15 @@ export function* firstTime() {
     if (firstTime) {
         yield call(Storage.set, FIRST_TIME, true);
     } else {
-        yield call(loadRecommendedFromCache);
+        yield call(fetchRecommendedFromCache);
     }
 }
 
-export function* loadRecommendedFromCache() {
+export function* fetchRecommendedFromCache() {
     const latestArtist = yield call(Storage.get, LATEST_ARTIST);
     if (latestArtist) {
-        // TODO: only load
         yield fork(fetchFirstSuggested, latestArtist);
-        // yield fork(mainSaga, latestArtist);
     }
-    console.log("NOT FIRST!", latestArtist);
 }
 
 export function* setRequestedArtistToCache(artist) {
@@ -163,7 +170,6 @@ export function* startup() {
 }
 
 function* mainSaga(artist) {
-    console.log("mainSaga", artist);
     if (artist) {
         yield put(actions.fetchProgressArtist(artist));
         const songs = yield call(fetchSongs, artist);
