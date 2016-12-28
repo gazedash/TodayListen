@@ -74,8 +74,8 @@ class Header extends Component {
     }
 
     render() {
-        const {correction, correctionSuccess, success, isFetching} = this.props;
-        const error = !success && !isFetching;
+        const {correction, correctionSuccess, success, isFetching, artist} = this.props;
+        const error = !success && !isFetching && artist;
         const searchButton = (
             <div className="search-button-container">
                 <IconButton
@@ -130,6 +130,7 @@ class Header extends Component {
 
 Header.propTypes = {
     artists: PropTypes.object.isRequired,
+    artist: PropTypes.string.isRequired,
     items: PropTypes.array.isRequired,
     isFetching: PropTypes.bool.isRequired,
     success: PropTypes.bool.isRequired,
@@ -141,15 +142,16 @@ Header.propTypes = {
 function mapStateToProps(state) {
     const {fetchArtist, suggestedArtists, artistCorrection} = state;
     const {correction = "", correctionSuccess = false} = artistCorrection;
-    const {isFetching = false, success = false, artist: nextArtist} = fetchArtist;
+    const {isFetching = false, success = false, artist} = fetchArtist;
     const {
         items,
-    } = suggestedArtists[nextArtist] || {
+    } = suggestedArtists[artist] || {
         isFetching: false,
         items: [],
     };
 
     return {
+        artist,
         artists: suggestedArtists,
         isFetching,
         success,
