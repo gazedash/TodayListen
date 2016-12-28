@@ -95,7 +95,6 @@ class App extends Component {
             } else {
                 if (isPlaying) {
                     player.pauseVideo();
-                    // player.playVideo();
                     this.setState((prevState) => ({
                         isPlaying: !isPlaying,
                     }));

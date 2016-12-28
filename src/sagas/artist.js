@@ -143,7 +143,7 @@ export function* setRequestedArtistToCache(artist) {
                 if (index < 0) {
                     requestedArtists.push(artist);
                 } else {
-                    // if exists push back
+                    // If exists push back
                     requestedArtists.splice(index, 1);
                     requestedArtists.push(artist);
                 }

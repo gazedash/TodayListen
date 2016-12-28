@@ -1,7 +1,7 @@
 import React, {Component, PropTypes} from "react";
-import IconButton from "material-ui/IconButton";
-import YouTube from "react-youtube";
 import _ from "lodash";
+import YouTube from "react-youtube";
+import IconButton from "material-ui/IconButton";
 
 class Player extends Component {
     constructor(props, context) {

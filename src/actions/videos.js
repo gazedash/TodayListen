@@ -2,13 +2,6 @@ export const REQUEST_VIDEO = 'REQUEST_VIDEO';
 export const RECEIVE_VIDEO = 'RECEIVE_VIDEO';
 export const INVALIDATE_VIDEO = 'INVALIDATE_VIDEO';
 
-export function invalidateVideo(data) {
-    return {
-        type: INVALIDATE_VIDEO,
-        ...data,
-    }
-}
-
 export function requestVideo(data) {
     return {
         type: REQUEST_VIDEO,

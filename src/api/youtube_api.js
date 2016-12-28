@@ -1,7 +1,7 @@
 export const GOOGLE_API = "https://www.googleapis.com/youtube";
 export const API_VERSION = "3";
 export const SEARCH = "search";
-export const API_KEY = "TODAY_LISTEN";
+export const API_KEY = "API_KEY";
 export const YOUTUBE_VIDEO_ENDPOINT = 'https://www.youtube.com';
 
 export class YouTube {

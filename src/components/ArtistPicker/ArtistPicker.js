@@ -101,9 +101,6 @@ export default class ArtistPicker extends React.Component {
             />,
         ];
 
-        // List
-        // justifyContent: 'center',
-
         return (
             <div className="artist-picker-container">
                 <IconButton

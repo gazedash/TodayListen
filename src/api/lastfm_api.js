@@ -3,7 +3,7 @@ export const API_VERSION = "2.0";
 export const GET_SIMILAR_ARTISTS = "artist.getsimilar";
 export const GET_ARTIST_CORRECTION = "artist.getcorrection";
 export const GET_POPULAR_TRACKS = "artist.getTopTracks";
-export const API_KEY = "TODAY_LISTEN";
+export const API_KEY = "API_KEY";
 
 export class LastFm {
     constructor({api_key, version}) {

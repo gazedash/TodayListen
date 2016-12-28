@@ -1,12 +1,12 @@
 import React, {Component, PropTypes} from "react";
+import {connect} from "react-redux";
 import AppBar from "material-ui/AppBar";
 import Search from "../../components/Search/Search";
 import IconButton from "material-ui/IconButton";
 import ArtistPicker from "../../components/ArtistPicker/ArtistPicker";
 import Correction from "../../components/Correction/Correction";
-import "./Header.css";
-import {connect} from "react-redux";
 import {nextArtist, selectArtist} from "../../actions/artist";
+import "./Header.css";
 
 class Header extends Component {
     constructor(props) {

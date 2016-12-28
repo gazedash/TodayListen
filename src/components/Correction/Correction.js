@@ -1,6 +1,6 @@
 import React, {Component, PropTypes} from "react";
-import IconButton from "material-ui/IconButton";
 import Paper from "material-ui/Paper";
+import IconButton from "material-ui/IconButton";
 import "./Correction.css";
 
 class Correction extends Component {

@@ -17,16 +17,16 @@ export function selectArtist(artist) {
     }
 }
 
-export function fetchFinishArtist(artist) {
+export function fetchFailArtist(artist) {
     return {
-        type: FETCH_FINISH_ARTIST,
+        type: FETCH_FAIL_ARTIST,
         artist,
     }
 }
 
-export function fetchFailArtist(artist) {
+export function fetchFinishArtist(artist) {
     return {
-        type: FETCH_FAIL_ARTIST,
+        type: FETCH_FINISH_ARTIST,
         artist,
     }
 }
@@ -38,16 +38,16 @@ export function requestArtistCorrection(artist) {
     }
 }
 
-export function receiveArtistCorrection(artist) {
+export function receiveFailArtistCorrection(artist) {
     return {
-        type: RECEIVE_ARTIST_CORRECTION,
+        type: RECEIVE_FAIL_ARTIST_CORRECTION,
         artist,
     }
 }
 
-export function receiveFailArtistCorrection(artist) {
+export function receiveArtistCorrection(artist) {
     return {
-        type: RECEIVE_FAIL_ARTIST_CORRECTION,
+        type: RECEIVE_ARTIST_CORRECTION,
         artist,
     }
 }
@@ -72,7 +72,6 @@ export function invalidateArtist(artist) {
         artist,
     }
 }
-
 
 export function requestSimilar(artist) {
     return {

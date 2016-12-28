@@ -17,7 +17,6 @@ function songs(state = {
                 ...state,
                 isFetching: false,
                 didInvalidate: false,
-                // items: action.songs,
                 lastUpdated: action.receivedAt,
             };
         default:
