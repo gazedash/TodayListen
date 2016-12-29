@@ -1,0 +1,17 @@
+.playlist-control {
+    height: 28px !important;
+    background-color: rgb(255, 207, 222) !important;
+    top: 42px;
+}
+
+.playlist-control-icon {
+    font-size: 10px;
+    color: rgba(0, 0, 0, 0.4) !important;
+}
+
+.playlist-control-buttons {
+}
+
+.playlist-control-title {
+    padding-left: 5px;
+}

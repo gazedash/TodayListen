@@ -8,9 +8,6 @@
 }
 
 .suggest-button {
-    width: 57px;
-    height: 57px;
-    padding: 0;
 }
 
 .artist-image {
@@ -62,6 +59,9 @@
 .artist-picker-container {
     display: flex;
     align-items: center;
+    position: absolute;
+    left: 5px;
+    top: -3px;
 }
 
 .artist-name {

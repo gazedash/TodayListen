@@ -6,6 +6,7 @@ import Playlist from "../../components/Playlist/Playlist";
 import Controls from "../../components/Controls/Controls";
 import Player from "../../components/Player/Player";
 import Header from "../Header/Header";
+import PlaylistControl from "../../components/PlaylistControl/PlaylistControl";
 import {invalidateArtist, nextArtist} from "../../actions/artist";
 import {invalidateSongs, removePopularSong, removeAllSongs} from "../../actions/songs";
 import "./App.css";
@@ -41,9 +42,7 @@ class App extends Component {
         }
     }
 
-    handleRefreshClick(e) {
-        e.preventDefault();
-
+    handleRefreshClick() {
         const {dispatch, nextArtist} = this.props;
 
         if (nextArtist) {
@@ -52,9 +51,7 @@ class App extends Component {
         }
     }
 
-    handleClearClick(e) {
-        e.preventDefault();
-
+    handleClearClick() {
         const {dispatch} = this.props;
         dispatch(removeAllSongs());
     }
@@ -171,7 +168,7 @@ class App extends Component {
             ) : videos.length === 0 ? <h3 className="playlist-empty">The list is empty.</h3> : null);
 
         return (
-            <div>
+            <div className="playlist-wrapper">
                 {spinner}
                 <Playlist
                     onDeleteClick={this.handleDeleteSong}
@@ -207,8 +204,6 @@ class App extends Component {
             <section className="page-content">
                 {this.renderPlaylist()}
                 {this.renderPlayer()}
-                {<h6><a href='#' onClick={this.handleRefreshClick}> Refresh</a></h6>}
-                {<h6><a href='#' onClick={this.handleClearClick}> Delete All</a></h6>}
             </section>
         )
     }
@@ -234,7 +229,13 @@ class App extends Component {
     render() {
         return (
             <div className="app-container">
-                <Header />
+                <div className="header-container">
+                    <Header />
+                    <PlaylistControl
+                        onRefresh={this.handleRefreshClick}
+                        onClear={this.handleClearClick}
+                    />
+                </div>
                 {this.renderPage()}
                 {this.renderFooter()}
             </div>

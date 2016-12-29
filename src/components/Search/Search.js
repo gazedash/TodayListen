@@ -10,21 +10,12 @@ export default class Search extends Component {
                 <TextField
                     className="searchbar"
                     hintText="Search..."
-                    hintStyle={{
-                        color: 'rgba(255,255,255,0.5)',
-                        bottom: 3,
-                    }}
                     errorText={this.props.errorText}
                     value={this.props.value}
                     onChange={this.props.onChange}
                     onKeyPress={this.props.onKeyPress}
                     fullWidth={true}
-                    inputStyle={{
-                        height: '100%',
-                    }}
-                    underlineStyle={{
-                        display: 'none',
-                    }}
+                    underlineShow={false}
                 />
             </div>
         );

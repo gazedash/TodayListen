@@ -104,13 +104,6 @@ class Header extends Component {
                 }}
                 className="app-bar"
             >
-                <Search
-                    errorText={errorText}
-                    children={searchButton}
-                    onKeyPress={(e) => this.onKeyPress(e)}
-                    value={this.state.value}
-                    onChange={this.handleChange}
-                />
                 <ArtistPicker
                     items={this.props.items.reduce((newArray, artist) => {
                         if (!this.props.artists[artist.name] && newArray.length < 3) {
@@ -122,6 +115,13 @@ class Header extends Component {
                     onClose={this.handleClose}
                     onSubmit={this.handleSubmit}
                     isOpen={this.state.open}
+                />
+                <Search
+                    errorText={errorText}
+                    children={searchButton}
+                    onKeyPress={(e) => this.onKeyPress(e)}
+                    value={this.state.value}
+                    onChange={this.handleChange}
                 />
             </AppBar>
         );
@@ -142,7 +142,7 @@ Header.propTypes = {
 function mapStateToProps(state) {
     const {fetchArtist, suggestedArtists, artistCorrection} = state;
     const {correction = "", correctionSuccess = false} = artistCorrection;
-    const {isFetching = false, success = false, artist} = fetchArtist;
+    const {isFetching = false, success = false, artist = ""} = fetchArtist;
     const {
         items,
     } = suggestedArtists[artist] || {
