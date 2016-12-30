@@ -15,10 +15,10 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 - Auto-loading new suggested songs (on playlist end or new session)
 
 ***Planned features***
-- Shuffle and repeat playlist
 - Load Albums
-- Move tracks with drag and drop
 - Settings
+- Shuffle and repeat playlist
+- Move tracks with drag and drop
+- Suggestion tree with ability to pre-select artists to play next
 - Last.fm like / dislike and scrobble integration, load personal recommendations
 - Like / dislike log
-- Suggestion tree with ability to pre-select artists to play next

@@ -12,7 +12,7 @@ import "./index.css";
 injectTapEventPlugin();
 
 ReactDOM.render(
-    <DocumentTitle title='TodayIlisten'>
+    <DocumentTitle title='TodayListen'>
         <MuiThemeProvider>
             <Routes history={hashHistory}/>
         </MuiThemeProvider>

@@ -1,9 +1,9 @@
 {
-  "name": "TodayIlisten",
+  "name": "TodayListen",
   "license": "Apache-2.0",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://shoegazerwithak.github.io/TodayIlisten",
+  "homepage": "https://todaylisten.github.io/",
   "devDependencies": {
     "gh-pages": "^0.12.0",
     "react-scripts": "0.8.4"
@@ -32,6 +32,6 @@
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
-    "deploy": "npm run build && gh-pages -d build"
+    "deploy": "npm run build && gh-pages -d build -r git@github.com:TodayListen/todaylisten.github.io.git"
   }
 }
