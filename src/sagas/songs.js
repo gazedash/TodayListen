@@ -14,9 +14,42 @@ function fetchSongsApi(artist) {
         });
 }
 
+function fetchTopAlbumsApi(artist) {
+    const getPopular = lastFm.getTopAlbums(artist);
+    return fetch(getPopular)
+        .then(response => response.json())
+        .then(json => {
+            return _.get(json, ['topalbums', 'album'], []);
+        });
+}
+
+function fetchAlbumTracksApi(artist, album) {
+    const getTracks = lastFm.getAlbumTracks(artist, album);
+    return fetch(getTracks)
+        .then(response => response.json())
+        .then(json => {
+            const songs = _.get(json, ['album', 'tracks', 'track'], []);
+            return songs.map((song) => ({artist: artist, song: `${artist} - ${song.name}`}));
+        });
+}
+
 export function* fetchSongs(artist) {
     yield put(actions.requestPopular(artist));
     const songs = yield call(fetchSongsApi, artist);
     yield put(actions.receivePopular(artist, songs));
+    return songs;
+}
+
+export function* fetchTopAlbums(artist) {
+    yield put(actions.requestTopAlbums(artist));
+    const songs = yield call(fetchTopAlbumsApi, artist);
+    yield put(actions.receiveTopAlbums(artist, songs));
+    return songs;
+}
+
+export function* fetchAlbumTracks(artist, album) {
+    yield put(actions.requestAlbumTracks(artist, album));
+    const songs = yield call(fetchAlbumTracksApi, artist, album);
+    yield put(actions.receiveAlbumTracks(artist, album, songs));
     return songs;
 }

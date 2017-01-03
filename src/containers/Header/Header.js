@@ -5,8 +5,10 @@ import Search from "../../components/Search/Search";
 import IconButton from "material-ui/IconButton";
 import ArtistPicker from "../../components/ArtistPicker/ArtistPicker";
 import Correction from "../../components/Correction/Correction";
+import TrackToAlbumSwitcher from "../../components/TrackToAlbumSwitcher/TrackToAlbumSwitcher";
 import {nextArtist, selectArtist} from "../../actions/artist";
 import "./Header.css";
+import {switchAlbumsToTopTracks} from "../../actions/settings";
 
 class Header extends Component {
     constructor(props) {
@@ -18,8 +20,10 @@ class Header extends Component {
         this.handleOpen = this.handleOpen.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.handleCorrectClose = this.handleCorrectClose.bind(this);
+        this.handleToggle = this.handleToggle.bind(this);
 
         this.state = {
+            toggled: false,
             value: '',
             open: false,
             correctionOpen: true,
@@ -40,6 +44,15 @@ class Header extends Component {
             value: event.target.value,
         });
     };
+
+    handleToggle() {
+        const {toggled} = this.state;
+        const {dispatch} = this.props;
+        this.setState((prevState) => ({
+            toggled: !prevState.toggled,
+        }));
+        dispatch(switchAlbumsToTopTracks(!toggled));
+    }
 
     handleSubmit(artistId) {
         if (artistId) {
@@ -75,6 +88,7 @@ class Header extends Component {
 
     render() {
         const {correction, correctionSuccess, success, isFetching, artist} = this.props;
+        const {toggled} = this.state;
         const error = !success && !isFetching && artist;
         const searchButton = (
             <div className="search-button-container">
@@ -122,6 +136,10 @@ class Header extends Component {
                     onKeyPress={(e) => this.onKeyPress(e)}
                     value={this.state.value}
                     onChange={this.handleChange}
+                />
+                <TrackToAlbumSwitcher
+                    onToggle={this.handleToggle}
+                    toggled={toggled}
                 />
             </AppBar>
         );

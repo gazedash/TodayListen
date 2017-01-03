@@ -3,9 +3,9 @@ import _ from "lodash";
 import lastFm from "../api/lastfm_api";
 import {take, put, call, fork, select} from "redux-saga/effects";
 import * as actions from "../actions/artist";
-import {nextArtistSelector, suggestedArtistsSelector, selectedArtistSelector} from "../selectors/index";
+import {nextArtistSelector, suggestedArtistsSelector, selectedArtistSelector, preferAlbumsSelector} from "../selectors/index";
 import {fetchVideo} from "./videos";
-import {fetchSongs} from "./songs";
+import {fetchSongs, fetchTopAlbums, fetchAlbumTracks} from "./songs";
 import Storage from "../utils/storage";
 
 const REQUESTED_ARTISTS = 'REQUESTED_ARTISTS';
@@ -172,7 +172,14 @@ export function* startup() {
 function* mainSaga(artist) {
     if (artist) {
         yield put(actions.fetchProgressArtist(artist));
-        const songs = yield call(fetchSongs, artist);
+        const preferAlbums = yield select(preferAlbumsSelector);
+        let songs;
+        if (preferAlbums) {
+            const albums = yield call(fetchTopAlbums, artist);
+            songs = yield call(fetchAlbumTracks, artist, albums[0].name);
+        } else {
+           songs = yield call(fetchSongs, artist);
+        }
         if (songs.length !== 0) {
             yield fork(setRequestedArtistToCache, artist);
             yield fork(setLatestRequestedArtistToCache, artist);
